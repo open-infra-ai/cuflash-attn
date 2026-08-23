@@ -257,6 +257,8 @@ if(BUILD_TESTING AND BUILD_SHARED_LIBS)
             -Dc_compiler=${CMAKE_C_COMPILER}
             -Dcxx_compiler=${CMAKE_CXX_COMPILER}
             -Dcuda_architectures=${CMAKE_CUDA_ARCHITECTURES}
+            -Dpackage_smoke_enable_asan=${ENABLE_ASAN}
+            -Dpackage_smoke_enable_ubsan=${ENABLE_UBSAN}
             -Dctest_command=${CMAKE_CTEST_COMMAND}
             -P ${CMAKE_SOURCE_DIR}/cmake/run_package_smoke.cmake
     )

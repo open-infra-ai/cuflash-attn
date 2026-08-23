@@ -45,6 +45,14 @@ endif()
 if(DEFINED cuda_architectures AND NOT cuda_architectures STREQUAL "")
   list(APPEND configure_args -DCMAKE_CUDA_ARCHITECTURES=${cuda_architectures})
 endif()
+if(DEFINED package_smoke_enable_asan)
+  list(APPEND configure_args
+       -DCUFLASH_PACKAGE_SMOKE_ENABLE_ASAN=${package_smoke_enable_asan})
+endif()
+if(DEFINED package_smoke_enable_ubsan)
+  list(APPEND configure_args
+       -DCUFLASH_PACKAGE_SMOKE_ENABLE_UBSAN=${package_smoke_enable_ubsan})
+endif()
 
 execute_process(
   COMMAND ${CMAKE_COMMAND} ${configure_args}
