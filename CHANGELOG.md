@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-08-23
+
 ### Changed
 
 - 面向用户的 GitHub 链接统一为 `github.com/open-infra-ai/...`
-- README 区分当前源码版本 `0.5.0` 与远端最新 tag `v0.3.0`，不再把未发布源码表述为已发布版本。
+- 补齐历史 `v0.4.0` / `v0.5.0` tag，并发布 `v0.5.1` 维护版本，使源码、
+  CHANGELOG 与 GitHub Release 恢复一致。
 - 更新文档依赖锁文件到兼容范围内的安全补丁版本，`npm audit` 从 8 项降至 4 项；
   剩余项均来自 VitePress 1.6.4 的 Vite 5/esbuild 链，当前无兼容修复，未强制升级
   到 VitePress 2 alpha。
@@ -20,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CI 构建矩阵改用不含逗号的稳定缓存键，避免 ccache action 在编译前拒绝任务。
+- 修复默认 CMake preset 静默编译 `sm_52`：在 `project()` 启用 CUDA 前设置
+  `80;86` 默认值，避免 WMMA 源码因 nvcc legacy 默认架构低于项目支持下限而编译失败。
 - RapidCheck 配置显式启用并链接其 GoogleTest integration target，补齐 `rapidcheck/gtest.h` 的 include 契约。
 - 统一公开 C++ API 默认 stream、实现内部 stream 与 host API smoke test 的空指针表达，满足 `modernize-use-nullptr` 门禁。
 - 将 `markdown-it-mathjax3` 固定到与 VitePress 1.x 兼容的 4.x 系列，恢复文档依赖安装。
@@ -310,6 +315,7 @@ This release introduces complete FP16 backward pass support and a thoroughly res
 
 | Version | Key Features | Release Date |
 |---------|--------------|--------------|
+| [0.5.1] | CI/cache fixes, RapidCheck integration, API hygiene, reproducible docs build | 2026-08-23 |
 | [0.5.0] | Tensor-core (WMMA) forward, FP32 logsumexp ABI, sm_75 tiling fallback, stream-ordered workspace | 2026-08-05 |
 | [0.4.0] | BF16 support, unified dtype templates, FA2 deferred normalization, public kernel primitives | 2026-07-28 |
 | [0.3.0] | Engineering cleanup, clangd/LSP tooling, contribution guides | 2026-04-24 |
@@ -322,6 +328,9 @@ This release introduces complete FP16 backward pass support and a thoroughly res
 
 ## Release Links | 发布链接
 
+- [v0.5.1](https://github.com/open-infra-ai/cuflash-attn/releases/tag/v0.5.1)
+- [v0.5.0](https://github.com/open-infra-ai/cuflash-attn/releases/tag/v0.5.0)
+- [v0.4.0](https://github.com/open-infra-ai/cuflash-attn/releases/tag/v0.4.0)
 - [v0.2.0](https://github.com/aicl-lab/cuflash-attn/releases/tag/v0.2.0)
 - [v0.1.0](https://github.com/aicl-lab/cuflash-attn/releases/tag/v0.1.0)
 - [v0.1.0-alpha.2](https://github.com/aicl-lab/cuflash-attn/releases/tag/v0.1.0-alpha.2)
@@ -329,7 +338,9 @@ This release introduces complete FP16 backward pass support and a thoroughly res
 
 ---
 
-[Unreleased]: https://github.com/aicl-lab/cuflash-attn/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/open-infra-ai/cuflash-attn/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/open-infra-ai/cuflash-attn/compare/v0.5.0...v0.5.1
+[0.4.0]: https://github.com/open-infra-ai/cuflash-attn/compare/v0.3.0...v0.4.0
 [0.5.0]: https://github.com/aicl-lab/cuflash-attn/compare/v0.4.0...v0.5.0
 [0.2.0]: https://github.com/aicl-lab/cuflash-attn/releases/tag/v0.2.0
 [0.1.0]: https://github.com/aicl-lab/cuflash-attn/releases/tag/v0.1.0

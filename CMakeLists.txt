@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.18)
-project(cuflash_attn VERSION 0.5.0 LANGUAGES CXX CUDA)
+
+# Set the project default before enabling CUDA. CMake initializes
+# CMAKE_CUDA_ARCHITECTURES during project(), so a fallback placed afterwards
+# would preserve nvcc's legacy sm_52 default instead of this supported set.
+if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+    set(CMAKE_CUDA_ARCHITECTURES "80;86" CACHE STRING "CUDA architectures")
+endif()
+
+project(cuflash_attn VERSION 0.5.1 LANGUAGES CXX CUDA)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -13,11 +21,6 @@ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 # Export compile_commands.json for clangd LSP support
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# CUDA architecture (configurable, default to common architectures)
-if(NOT CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 80 86)  # A100 + RTX 30xx as default
-endif()
 
 # Find CUDA
 find_package(CUDAToolkit REQUIRED)
