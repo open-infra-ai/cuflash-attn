@@ -10,7 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- 面向用户的 GitHub 链接统一为 `github.com/aicl-lab/...`
+
+- 面向用户的 GitHub 链接统一为 `github.com/open-infra-ai/...`
+- README 区分当前源码版本 `0.5.0` 与远端最新 tag `v0.3.0`，不再把未发布源码表述为已发布版本。
+- 更新文档依赖锁文件到兼容范围内的安全补丁版本，`npm audit` 从 8 项降至 4 项；
+  剩余项均来自 VitePress 1.6.4 的 Vite 5/esbuild 链，当前无兼容修复，未强制升级
+  到 VitePress 2 alpha。
+
+### Fixed
+
+- CI 构建矩阵改用不含逗号的稳定缓存键，避免 ccache action 在编译前拒绝任务。
+- RapidCheck 配置显式启用并链接其 GoogleTest integration target，补齐 `rapidcheck/gtest.h` 的 include 契约。
+- 统一公开 C++ API 默认 stream、实现内部 stream 与 host API smoke test 的空指针表达，满足 `modernize-use-nullptr` 门禁。
+- 将 `markdown-it-mathjax3` 固定到与 VitePress 1.x 兼容的 4.x 系列，恢复文档依赖安装。
+- 将不存在的 `validation-v1.0.md` 引用改为实际 benchmark 与测试文档，消除 VitePress 死链。
+- 将未被当前 Shiki 词法包识别的 `cuda` 代码围栏改为等价的 `cpp` 高亮，消除文档构建告警。
+- 格式化 FlashDecoding 实现、测试与 benchmark，使 clang-format 17 门禁可复现通过。
 
 ---
 

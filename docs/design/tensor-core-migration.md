@@ -1,6 +1,6 @@
 # Tensor Core 迁移计划
 
-> 状态：**Phase 2（前向）已实现** —— FP16/BF16 的 WMMA 前向 kernel 已在 v0.5.0 落地（`src/forward/flash_attention_forward_wmma.cu`），带运行时分派，标量路径保留为 fallback。单元测试套件（`ctest`）在本机 sm_86（RTX 3060）上通过；真实硬件的数值对比、benchmark 与 compute-sanitizer 结果见 `docs/performance/validation-v1.0.md`。**Backward 的 WMMA 化明确不纳入 v1.0**（保持 scalar），后续阶段另议。每个阶段都设计为可在真实硬件上独立落地并验证。
+> 状态：**Phase 2（前向）已实现** —— FP16/BF16 的 WMMA 前向 kernel 已在 v0.5.0 落地（`src/forward/flash_attention_forward_wmma.cu`），带运行时分派，标量路径保留为 fallback。单元测试套件（`ctest`）在本机 sm_86（RTX 3060）上通过；真实硬件的数值对比与 benchmark 见 [`docs/performance/benchmarks.md`](../performance/benchmarks.md)，compute-sanitizer 复现步骤见[故障排除文档](../troubleshooting.md#cuda-运行时错误)。**Backward 的 WMMA 化明确不纳入 v1.0**（保持 scalar），后续阶段另议。每个阶段都设计为可在真实硬件上独立落地并验证。
 
 ## 为什么需要它
 

@@ -7,8 +7,8 @@
 //   3. FP16 路径正确；
 //   4. 非法参数返回错误而非崩溃。
 
-#include <gtest/gtest.h>
 #include <cuda_runtime.h>
+#include <gtest/gtest.h>
 
 #include <cmath>
 #include <random>
@@ -47,7 +47,8 @@ static void reference_attention_decode(const std::vector<float>& Q, const std::v
             }
             for (int d = 0; d < head_dim; d++) {
                 float o = 0.0f;
-                for (int j = 0; j < seq_len; j++) o += scores[j] * V[bh_kv + j * head_dim + d];
+                for (int j = 0; j < seq_len; j++)
+                    o += scores[j] * V[bh_kv + j * head_dim + d];
                 O[bh * head_dim + d] = o / l;
             }
         }
@@ -58,18 +59,20 @@ static std::vector<float> random_f32(size_t n, unsigned seed) {
     std::mt19937 gen(seed);
     std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
     std::vector<float> v(n);
-    for (auto& x : v) x = dist(gen);
+    for (auto& x : v)
+        x = dist(gen);
     return v;
 }
 
 static float max_abs_diff(const std::vector<float>& a, const std::vector<float>& b) {
     float mx = 0.0f;
-    for (size_t i = 0; i < a.size(); i++) mx = std::max(mx, std::abs(a[i] - b[i]));
+    for (size_t i = 0; i < a.size(); i++)
+        mx = std::max(mx, std::abs(a[i] - b[i]));
     return mx;
 }
 
 class FlashDecodingTest : public ::testing::Test {
-  protected:
+   protected:
     void SetUp() override {
         int device_count = 0;
         if (cudaGetDeviceCount(&device_count) != cudaSuccess || device_count == 0) {
@@ -138,7 +141,8 @@ TEST_F(FlashDecodingTest, ChunkCountInvariant) {
     std::vector<float> ref(bh * head_dim);
     reference_attention_decode(Q, K, V, ref, batch_size, num_heads, seq_len, head_dim, scale);
 
-    float *dQ = nullptr, *dK = nullptr, *dV = nullptr, *dO1 = nullptr, *dO16 = nullptr, *dL = nullptr;
+    float *dQ = nullptr, *dK = nullptr, *dV = nullptr, *dO1 = nullptr, *dO16 = nullptr,
+          *dL = nullptr;
     cudaMalloc(&dQ, Q.size() * sizeof(float));
     cudaMalloc(&dK, K.size() * sizeof(float));
     cudaMalloc(&dV, V.size() * sizeof(float));
@@ -152,8 +156,8 @@ TEST_F(FlashDecodingTest, ChunkCountInvariant) {
     ASSERT_EQ(flash_attention_decode(dQ, dK, dV, dO1, dL, batch_size, num_heads, seq_len, head_dim,
                                      scale, 1),
               FlashAttentionError::SUCCESS);
-    ASSERT_EQ(flash_attention_decode(dQ, dK, dV, dO16, dL, batch_size, num_heads, seq_len,
-                                     head_dim, scale, 16),
+    ASSERT_EQ(flash_attention_decode(dQ, dK, dV, dO16, dL, batch_size, num_heads, seq_len, head_dim,
+                                     scale, 16),
               FlashAttentionError::SUCCESS);
     cudaDeviceSynchronize();
 
@@ -189,9 +193,12 @@ TEST_F(FlashDecodingTest, MatchesCpuReferenceHalf) {
     const auto Vf = random_f32(bh * seq_len * head_dim, 32);
 
     std::vector<half> Q(Qf.size()), K(Kf.size()), V(Vf.size());
-    for (size_t i = 0; i < Qf.size(); i++) Q[i] = __float2half(Qf[i]);
-    for (size_t i = 0; i < Kf.size(); i++) K[i] = __float2half(Kf[i]);
-    for (size_t i = 0; i < Vf.size(); i++) V[i] = __float2half(Vf[i]);
+    for (size_t i = 0; i < Qf.size(); i++)
+        Q[i] = __float2half(Qf[i]);
+    for (size_t i = 0; i < Kf.size(); i++)
+        K[i] = __float2half(Kf[i]);
+    for (size_t i = 0; i < Vf.size(); i++)
+        V[i] = __float2half(Vf[i]);
 
     std::vector<float> ref(bh * head_dim);
     reference_attention_decode(Qf, Kf, Vf, ref, batch_size, num_heads, seq_len, head_dim, scale);
@@ -217,7 +224,8 @@ TEST_F(FlashDecodingTest, MatchesCpuReferenceHalf) {
     cudaDeviceSynchronize();
 
     float mx = 0.0f;
-    for (size_t i = 0; i < out.size(); i++) mx = std::max(mx, std::abs(__half2float(out[i]) - ref[i]));
+    for (size_t i = 0; i < out.size(); i++)
+        mx = std::max(mx, std::abs(__half2float(out[i]) - ref[i]));
     EXPECT_LT(mx, 1e-2f) << "FP16 decode vs CPU reference";
 
     cudaFree(dQ);
@@ -235,13 +243,13 @@ TEST_F(FlashDecodingTest, InvalidArgumentsReturnError) {
                                      64, 1.0f, 4),
               FlashAttentionError::NULL_POINTER);
     // 不支持的 head_dim（有效指针）→ UNSUPPORTED_DTYPE
-    EXPECT_EQ(flash_attention_decode(&dummy, &dummy, &dummy, &dummy, &dummy, 1, 1, 128, 17, 1.0f,
-                                     4),
-              FlashAttentionError::UNSUPPORTED_HEAD_DIM);
+    EXPECT_EQ(
+        flash_attention_decode(&dummy, &dummy, &dummy, &dummy, &dummy, 1, 1, 128, 17, 1.0f, 4),
+        FlashAttentionError::UNSUPPORTED_HEAD_DIM);
     // batch_size=0（有效指针）→ INVALID_DIMENSION
-    EXPECT_EQ(flash_attention_decode(&dummy, &dummy, &dummy, &dummy, &dummy, 0, 1, 128, 64, 1.0f,
-                                     4),
-              FlashAttentionError::INVALID_DIMENSION);
+    EXPECT_EQ(
+        flash_attention_decode(&dummy, &dummy, &dummy, &dummy, &dummy, 0, 1, 128, 64, 1.0f, 4),
+        FlashAttentionError::INVALID_DIMENSION);
 }
 
 }  // namespace test

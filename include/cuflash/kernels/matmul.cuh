@@ -35,7 +35,7 @@ namespace kernels {
 /// @return        SUCCESS on success, error code on failure
 template<int M, int N, int K>
 CUFLASH_EXPORT FlashAttentionError matmul_ABt(const float* A, const float* B, float* C, float scale,
-                                              cudaStream_t stream = 0);
+                                              cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // C = A @ B
@@ -45,7 +45,7 @@ CUFLASH_EXPORT FlashAttentionError matmul_ABt(const float* A, const float* B, fl
 /// Used for computing attention output: O = P @ V.
 template<int M, int N, int K>
 CUFLASH_EXPORT FlashAttentionError matmul_AB(const float* A, const float* B, float* C, float scale,
-                                             cudaStream_t stream = 0);
+                                             cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // C += A @ B (Accumulate)
@@ -55,7 +55,7 @@ CUFLASH_EXPORT FlashAttentionError matmul_AB(const float* A, const float* B, flo
 /// Used for accumulating partial results across KV blocks.
 template<int M, int N, int K>
 CUFLASH_EXPORT FlashAttentionError matmul_AB_acc(const float* A, const float* B, float* C,
-                                                 float scale, cudaStream_t stream = 0);
+                                                 float scale, cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // C = A^T @ B
@@ -65,7 +65,7 @@ CUFLASH_EXPORT FlashAttentionError matmul_AB_acc(const float* A, const float* B,
 /// Used for computing gradients in backward pass.
 template<int M, int N, int K>
 CUFLASH_EXPORT FlashAttentionError matmul_AtB(const float* A, const float* B, float* C, float scale,
-                                              cudaStream_t stream = 0);
+                                              cudaStream_t stream = nullptr);
 
 }  // namespace kernels
 }  // namespace cuflash

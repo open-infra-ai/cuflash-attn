@@ -54,25 +54,27 @@ __device__ __forceinline__ float warp_reduce_sum(float val) {
     return val;
 }
 
-template <bool IsMax>
+template<bool IsMax>
 __device__ __forceinline__ float block_reduce(float val, float* red) {
     const int lane = threadIdx.x & 31;
     const int wid = threadIdx.x >> 5;
     constexpr int kWarps = kDecodeThreads / 32;
     val = IsMax ? warp_reduce_max(val) : warp_reduce_sum(val);
-    if (lane == 0) red[wid] = val;
+    if (lane == 0)
+        red[wid] = val;
     __syncthreads();
     if (wid == 0) {
         val = (lane < kWarps) ? red[lane] : (IsMax ? -FLT_MAX : 0.0f);
         val = IsMax ? warp_reduce_max(val) : warp_reduce_sum(val);
-        if (lane == 0) red[0] = val;
+        if (lane == 0)
+            red[0] = val;
     }
     __syncthreads();
     return red[0];
 }
 
 // Phase 1: partial online softmax over one KV chunk for one (batch, head).
-template <typename InputT, int BLOCK_N, int HEAD_DIM>
+template<typename InputT, int BLOCK_N, int HEAD_DIM>
 __global__ void __launch_bounds__(kDecodeThreads)
     flash_decoding_partial_kernel(const InputT* __restrict__ Q, const InputT* __restrict__ K,
                                   const InputT* __restrict__ V, float* __restrict__ partial_O,
@@ -105,7 +107,8 @@ __global__ void __launch_bounds__(kDecodeThreads)
     float l = 0.0f;
     float o_acc[HEAD_DIM];
 #pragma unroll
-    for (int d = 0; d < HEAD_DIM; ++d) o_acc[d] = 0.0f;
+    for (int d = 0; d < HEAD_DIM; ++d)
+        o_acc[d] = 0.0f;
 
     for (int kv = chunk_start; kv < chunk_start + chunk_size; kv += BLOCK_N) {
         const int tile_n = min(BLOCK_N, chunk_start + chunk_size - kv);
@@ -123,13 +126,15 @@ __global__ void __launch_bounds__(kDecodeThreads)
         // Scores: thread j computes dot(q, K[j]) for j < tile_n.
         for (int j = tid; j < tile_n; j += kDecodeThreads) {
             float s = 0.0f;
-            for (int d = 0; d < HEAD_DIM; ++d) s += q_s[d] * K_tile[j * HEAD_DIM + d];
+            for (int d = 0; d < HEAD_DIM; ++d)
+                s += q_s[d] * K_tile[j * HEAD_DIM + d];
             scores[j] = s * scale;
         }
         __syncthreads();
 
         float tile_max = -FLT_MAX;
-        for (int j = tid; j < tile_n; j += kDecodeThreads) tile_max = fmaxf(tile_max, scores[j]);
+        for (int j = tid; j < tile_n; j += kDecodeThreads)
+            tile_max = fmaxf(tile_max, scores[j]);
         tile_max = block_reduce<true>(tile_max, red);
 
         const float m_new = fmaxf(m, tile_max);
@@ -159,13 +164,12 @@ __global__ void __launch_bounds__(kDecodeThreads)
 }
 
 // Phase 2: reduce partials across chunks (one block per batch*head).
-template <typename InputT, int HEAD_DIM>
+template<typename InputT, int HEAD_DIM>
 __global__ void __launch_bounds__(kDecodeThreads)
     flash_decoding_combine_kernel(const float* __restrict__ partial_O,
                                   const float* __restrict__ partial_m,
-                                  const float* __restrict__ partial_l,
-                                  InputT* __restrict__ O, float* __restrict__ L, int num_chunks,
-                                  int bh_total) {
+                                  const float* __restrict__ partial_l, InputT* __restrict__ O,
+                                  float* __restrict__ L, int num_chunks, int bh_total) {
     const int bh = blockIdx.x;
     const int tid = threadIdx.x;
 
@@ -186,14 +190,14 @@ __global__ void __launch_bounds__(kDecodeThreads)
         for (int c = 0; c < num_chunks; ++c)
             o += partial_O[(static_cast<size_t>(c) * bh_total + bh) * HEAD_DIM + d] *
                  expf(partial_m[c * bh_total + bh] - m);
-        O[static_cast<size_t>(bh) * HEAD_DIM + d] =
-            impl::TypeAdapter<InputT>::from_compute(o / l);
+        O[static_cast<size_t>(bh) * HEAD_DIM + d] = impl::TypeAdapter<InputT>::from_compute(o / l);
     }
-    if (tid == 0) L[bh] = m + logf(l);
+    if (tid == 0)
+        L[bh] = m + logf(l);
 }
 
 // Dispatch helper per dtype / head_dim.
-template <typename InputT>
+template<typename InputT>
 FlashAttentionError launch_flash_decoding_typed(const InputT* Q, const InputT* K, const InputT* V,
                                                 InputT* O, float* L, int batch_size, int num_heads,
                                                 int seq_len, int head_dim, float scale,
@@ -207,7 +211,8 @@ FlashAttentionError launch_flash_decoding_typed(const InputT* Q, const InputT* K
     if (head_dim != 32 && head_dim != 64 && head_dim != 128) {
         return FlashAttentionError::UNSUPPORTED_HEAD_DIM;
     }
-    if (num_chunks <= 0) num_chunks = 1;
+    if (num_chunks <= 0)
+        num_chunks = 1;
     const int max_chunks = (seq_len + kDecodeBlockN - 1) / kDecodeBlockN;
     num_chunks = min(num_chunks, max_chunks);
     const int chunk_len = (seq_len + num_chunks - 1) / num_chunks;
@@ -222,7 +227,8 @@ FlashAttentionError launch_flash_decoding_typed(const InputT* Q, const InputT* K
     static float* scratch = nullptr;
     static size_t scratch_bytes = 0;
     if (scratch == nullptr || scratch_bytes < need_bytes) {
-        if (scratch != nullptr) cudaFree(scratch);
+        if (scratch != nullptr)
+            cudaFree(scratch);
         if (cudaMalloc(&scratch, need_bytes) != cudaSuccess) {
             scratch = nullptr;
             return FlashAttentionError::CUDA_ERROR;
@@ -234,29 +240,36 @@ FlashAttentionError launch_flash_decoding_typed(const InputT* Q, const InputT* K
     float* partial_l = partial_m + partial_m_size;
 
     dim3 grid(num_chunks, bh_total);
-    size_t shared_partial = (kDecodeBlockN * 2 * head_dim + head_dim + kDecodeBlockN + 4) * sizeof(float);
+    size_t shared_partial =
+        (kDecodeBlockN * 2 * head_dim + head_dim + kDecodeBlockN + 4) * sizeof(float);
     if (head_dim == 32) {
-        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 32><<<grid, kDecodeThreads, shared_partial, stream>>>(
-            Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
+        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 32>
+            <<<grid, kDecodeThreads, shared_partial, stream>>>(
+                Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
     } else if (head_dim == 64) {
-        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 64><<<grid, kDecodeThreads, shared_partial, stream>>>(
-            Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
+        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 64>
+            <<<grid, kDecodeThreads, shared_partial, stream>>>(
+                Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
     } else {
-        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 128><<<grid, kDecodeThreads, shared_partial, stream>>>(
-            Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
+        flash_decoding_partial_kernel<InputT, kDecodeBlockN, 128>
+            <<<grid, kDecodeThreads, shared_partial, stream>>>(
+                Q, K, V, partial_o, partial_m, partial_l, seq_len, num_chunks, chunk_len, scale);
     }
 
     dim3 combine_grid(bh_total);
     size_t shared_combine = (kDecodeThreads / 32) * sizeof(float);
     if (head_dim == 32) {
-        flash_decoding_combine_kernel<InputT, 32><<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
-            partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
+        flash_decoding_combine_kernel<InputT, 32>
+            <<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
+                partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
     } else if (head_dim == 64) {
-        flash_decoding_combine_kernel<InputT, 64><<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
-            partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
+        flash_decoding_combine_kernel<InputT, 64>
+            <<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
+                partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
     } else {
-        flash_decoding_combine_kernel<InputT, 128><<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
-            partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
+        flash_decoding_combine_kernel<InputT, 128>
+            <<<combine_grid, kDecodeThreads, shared_combine, stream>>>(
+                partial_o, partial_m, partial_l, O, L, num_chunks, bh_total);
     }
 
     return FlashAttentionError::SUCCESS;

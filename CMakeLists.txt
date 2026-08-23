@@ -135,6 +135,7 @@ if(BUILD_TESTS)
             GIT_TAG        ff6af6fc683159deb51c543b065eba14dfcf329b
             GIT_SHALLOW    FALSE
         )
+        set(RC_ENABLE_GTEST ON CACHE BOOL "" FORCE)
         FetchContent_MakeAvailable(rapidcheck)
     endif()
 
@@ -161,7 +162,7 @@ if(BUILD_TESTS)
     set_target_properties(cuflash_attn_tests PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
     if(ENABLE_RAPIDCHECK)
-        target_link_libraries(cuflash_attn_tests PRIVATE rapidcheck)
+        target_link_libraries(cuflash_attn_tests PRIVATE rapidcheck_gtest)
         target_compile_definitions(cuflash_attn_tests PRIVATE CUFLASH_ENABLE_RAPIDCHECK=1)
     else()
         target_compile_definitions(cuflash_attn_tests PRIVATE CUFLASH_ENABLE_RAPIDCHECK=0)

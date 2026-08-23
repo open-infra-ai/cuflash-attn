@@ -31,13 +31,14 @@ CUFLASH_EXPORT FlashAttentionError flash_attention_forward(const float* Q, const
                                                            const float* V, float* O, float* L,
                                                            int batch_size, int num_heads,
                                                            int seq_len, int head_dim, float scale,
-                                                           bool causal, cudaStream_t stream = 0);
+                                                           bool causal,
+                                                           cudaStream_t stream = nullptr);
 
 // Backward pass
 CUFLASH_EXPORT FlashAttentionError flash_attention_backward(
     const float* Q, const float* K, const float* V, const float* O, const float* L, const float* dO,
     float* dQ, float* dK, float* dV, int batch_size, int num_heads, int seq_len, int head_dim,
-    float scale, bool causal, cudaStream_t stream = 0);
+    float scale, bool causal, cudaStream_t stream = nullptr);
 
 // Half precision versions.
 // NOTE: L (logsumexp) is always float, even for reduced-precision inputs. The
@@ -45,30 +46,26 @@ CUFLASH_EXPORT FlashAttentionError flash_attention_backward(
 // half would round the normalization constant and systematically corrupt the
 // gradients. This matches the reference FlashAttention, which keeps softmax_lse
 // in FP32.
-CUFLASH_EXPORT FlashAttentionError flash_attention_forward(const half* Q, const half* K,
-                                                           const half* V, half* O, float* L,
-                                                           int batch_size, int num_heads,
-                                                           int seq_len, int head_dim, float scale,
-                                                           bool causal, cudaStream_t stream = 0);
+CUFLASH_EXPORT FlashAttentionError flash_attention_forward(
+    const half* Q, const half* K, const half* V, half* O, float* L, int batch_size, int num_heads,
+    int seq_len, int head_dim, float scale, bool causal, cudaStream_t stream = nullptr);
 
 CUFLASH_EXPORT FlashAttentionError flash_attention_backward(
     const half* Q, const half* K, const half* V, const half* O, const float* L, const half* dO,
     half* dQ, half* dK, half* dV, int batch_size, int num_heads, int seq_len, int head_dim,
-    float scale, bool causal, cudaStream_t stream = 0);
+    float scale, bool causal, cudaStream_t stream = nullptr);
 
 // BFloat16 precision versions (L is float for the same reason as above).
-CUFLASH_EXPORT FlashAttentionError flash_attention_forward(const __nv_bfloat16* Q,
-                                                           const __nv_bfloat16* K,
-                                                           const __nv_bfloat16* V, __nv_bfloat16* O,
-                                                           float* L, int batch_size, int num_heads,
-                                                           int seq_len, int head_dim, float scale,
-                                                           bool causal, cudaStream_t stream = 0);
+CUFLASH_EXPORT FlashAttentionError
+flash_attention_forward(const __nv_bfloat16* Q, const __nv_bfloat16* K, const __nv_bfloat16* V,
+                        __nv_bfloat16* O, float* L, int batch_size, int num_heads, int seq_len,
+                        int head_dim, float scale, bool causal, cudaStream_t stream = nullptr);
 
 CUFLASH_EXPORT FlashAttentionError flash_attention_backward(
     const __nv_bfloat16* Q, const __nv_bfloat16* K, const __nv_bfloat16* V, const __nv_bfloat16* O,
     const float* L, const __nv_bfloat16* dO, __nv_bfloat16* dQ, __nv_bfloat16* dK,
     __nv_bfloat16* dV, int batch_size, int num_heads, int seq_len, int head_dim, float scale,
-    bool causal, cudaStream_t stream = 0);
+    bool causal, cudaStream_t stream = nullptr);
 
 // Decode pass (FlashDecoding / Split-KV) — query_len == 1 against a long KV.
 // Q: [batch_size * num_heads, 1, head_dim]
@@ -83,20 +80,17 @@ CUFLASH_EXPORT FlashAttentionError flash_attention_decode(const float* Q, const 
                                                           const float* V, float* O, float* L,
                                                           int batch_size, int num_heads,
                                                           int seq_len, int head_dim, float scale,
-                                                          int num_chunks, cudaStream_t stream = 0);
+                                                          int num_chunks,
+                                                          cudaStream_t stream = nullptr);
 
-CUFLASH_EXPORT FlashAttentionError flash_attention_decode(const half* Q, const half* K,
-                                                          const half* V, half* O, float* L,
-                                                          int batch_size, int num_heads,
-                                                          int seq_len, int head_dim, float scale,
-                                                          int num_chunks, cudaStream_t stream = 0);
+CUFLASH_EXPORT FlashAttentionError flash_attention_decode(
+    const half* Q, const half* K, const half* V, half* O, float* L, int batch_size, int num_heads,
+    int seq_len, int head_dim, float scale, int num_chunks, cudaStream_t stream = nullptr);
 
-CUFLASH_EXPORT FlashAttentionError flash_attention_decode(const __nv_bfloat16* Q,
-                                                          const __nv_bfloat16* K,
-                                                          const __nv_bfloat16* V, __nv_bfloat16* O,
-                                                          float* L, int batch_size, int num_heads,
-                                                          int seq_len, int head_dim, float scale,
-                                                          int num_chunks, cudaStream_t stream = 0);
+CUFLASH_EXPORT FlashAttentionError
+flash_attention_decode(const __nv_bfloat16* Q, const __nv_bfloat16* K, const __nv_bfloat16* V,
+                       __nv_bfloat16* O, float* L, int batch_size, int num_heads, int seq_len,
+                       int head_dim, float scale, int num_chunks, cudaStream_t stream = nullptr);
 
 }  // namespace cuflash
 

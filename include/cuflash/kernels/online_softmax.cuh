@@ -33,7 +33,7 @@ namespace kernels {
 /// @param stream     CUDA stream
 /// @return           SUCCESS on success, error code on failure
 CUFLASH_EXPORT FlashAttentionError online_softmax_init(float* state_m, float* state_l, int rows,
-                                                       cudaStream_t stream = 0);
+                                                       cudaStream_t stream = nullptr);
 
 /// Update online softmax state with a new block's statistics.
 /// For each row: new_m = max(old_m, block_max), then rescale sums.
@@ -48,7 +48,7 @@ CUFLASH_EXPORT FlashAttentionError online_softmax_init(float* state_m, float* st
 CUFLASH_EXPORT FlashAttentionError online_softmax_update(const float* block_max,
                                                          const float* block_sum, float* state_m,
                                                          float* state_l, int rows,
-                                                         cudaStream_t stream = 0);
+                                                         cudaStream_t stream = nullptr);
 
 /// Finalize online softmax and produce outputs.
 /// Computes logsumexp = m + log(l) and normalizer = 1/l.
@@ -63,7 +63,7 @@ CUFLASH_EXPORT FlashAttentionError online_softmax_update(const float* block_max,
 CUFLASH_EXPORT FlashAttentionError online_softmax_finalize(const float* state_m,
                                                            const float* state_l, float* logsumexp,
                                                            float* normalizer, int rows,
-                                                           cudaStream_t stream = 0);
+                                                           cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // High-level Convenience API
@@ -82,7 +82,8 @@ CUFLASH_EXPORT FlashAttentionError online_softmax_finalize(const float* state_m,
 /// @return           SUCCESS on success, error code on failure
 CUFLASH_EXPORT FlashAttentionError online_softmax_forward(const float* input, float* output,
                                                           float* logsumexp, int rows, int cols,
-                                                          int block_size, cudaStream_t stream = 0);
+                                                          int block_size,
+                                                          cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // Warp-level Primitives (for use in custom kernels)

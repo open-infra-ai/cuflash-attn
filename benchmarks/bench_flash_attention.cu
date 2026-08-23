@@ -42,8 +42,8 @@ static std::vector<T*> allocate_and_init(const std::vector<size_t>& sizes) {
 //     dQ kernel  3 tile matmuls (QK^T, dO·V^T, dS·K)
 //     dKdV kernel 4 tile matmuls (QK^T, P^T·dO, dO·V^T, dS^T·Q)
 //     = 14 * B*H*N^2*D FLOPs; causal ~= half.
-static double attention_flops(int batch_size, int num_heads, int seq_len,
-                              int head_dim, bool backward, bool causal) {
+static double attention_flops(int batch_size, int num_heads, int seq_len, int head_dim,
+                              bool backward, bool causal) {
     const double bh = static_cast<double>(batch_size) * num_heads;
     const double n = static_cast<double>(seq_len);
     const double d = static_cast<double>(head_dim);
@@ -66,8 +66,7 @@ static double fwd_logical_hbm_elements(int bh, int n, int d, bool causal, int bm
         kv_rows += static_cast<double>(valid_rows);
     }
     // Q + O 各 1 次，K/V 各按每个 Q block 的重载次数计
-    return 2.0 * static_cast<double>(bh) * n * d +
-           2.0 * static_cast<double>(bh) * d * kv_rows;
+    return 2.0 * static_cast<double>(bh) * n * d + 2.0 * static_cast<double>(bh) * d * kv_rows;
 }
 
 // Forward tiling choices, mirroring the launcher in
@@ -79,10 +78,10 @@ struct FwdTile {
 
 static FwdTile fwd_scalar_tile(int head_dim, int max_dynamic_smem) {
     using C = cuflash::impl::ForwardTilingConfig;
-    if (head_dim == 32) return {C::BLOCK_M, C::BLOCK_N};
+    if (head_dim == 32)
+        return {C::BLOCK_M, C::BLOCK_N};
     if (head_dim == 64) {
-        if (C::smem_bytes(64, C::BLOCK_M, C::BLOCK_N) >
-            static_cast<size_t>(max_dynamic_smem)) {
+        if (C::smem_bytes(64, C::BLOCK_M, C::BLOCK_N) > static_cast<size_t>(max_dynamic_smem)) {
             return {C::BLOCK_M_SMALL, C::BLOCK_N_SMALL};
         }
         return {C::BLOCK_M, C::BLOCK_N};
@@ -110,8 +109,7 @@ static FwdTile fwd_tile_for_elem_size(size_t elem_size, int head_dim, int max_dy
     int major = 0;
     bool use_wmma = false;
     if (cudaGetDevice(&device) == cudaSuccess &&
-        cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, device) ==
-            cudaSuccess) {
+        cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, device) == cudaSuccess) {
         // On sm_8x+ both FP16 and BF16 take the WMMA path; on sm_70 FP16 does.
         use_wmma = major >= 8 || major == 7;
     }
@@ -124,15 +122,13 @@ static FwdTile fwd_tile_for_elem_size(size_t elem_size, int head_dim, int max_dy
 //   an ncu measurement because the current code has no reliable byte model.
 //   Counter names use "LogicalHBM GB/s" on purpose so nobody mistakes the
 //   modeled number for a measured HBM bandwidth.
-static void report_metrics(benchmark::State& state, int batch_size, int num_heads,
-                           int seq_len, int head_dim, size_t elem_size,
-                           bool backward, bool causal) {
+static void report_metrics(benchmark::State& state, int batch_size, int num_heads, int seq_len,
+                           int head_dim, size_t elem_size, bool backward, bool causal) {
     const double flops =
         attention_flops(batch_size, num_heads, seq_len, head_dim, backward, causal);
-    state.counters["GFLOPS/s"] = benchmark::Counter(
-        flops / 1e9,
-        benchmark::Counter::kIsIterationInvariantRate,
-        benchmark::Counter::OneK::kIs1000);
+    state.counters["GFLOPS/s"] =
+        benchmark::Counter(flops / 1e9, benchmark::Counter::kIsIterationInvariantRate,
+                           benchmark::Counter::OneK::kIs1000);
 
     if (!backward) {
         int max_dynamic_smem = 0;
@@ -141,10 +137,9 @@ static void report_metrics(benchmark::State& state, int batch_size, int num_head
         const double logical_bytes =
             fwd_logical_hbm_elements(batch_size * num_heads, seq_len, head_dim, causal, tile.bm) *
             static_cast<double>(elem_size);
-        state.counters["LogicalHBM GB/s"] = benchmark::Counter(
-            logical_bytes / 1e9,
-            benchmark::Counter::kIsIterationInvariantRate,
-            benchmark::Counter::OneK::kIs1000);
+        state.counters["LogicalHBM GB/s"] =
+            benchmark::Counter(logical_bytes / 1e9, benchmark::Counter::kIsIterationInvariantRate,
+                               benchmark::Counter::OneK::kIs1000);
     }
 }
 
@@ -257,17 +252,15 @@ static void BM_NaiveForward_FP32(benchmark::State& state) {
         attention_flops(batch_size, num_heads, seq_len, head_dim, /*backward=*/false,
                         /*causal=*/false);
     const double elems = static_cast<double>(batch_size) * num_heads * seq_len * head_dim;
-    const double bytes = 4.0 * elems * sizeof(float) +
-                         2.0 * static_cast<double>(batch_size) * num_heads * seq_len * seq_len *
-                             sizeof(float);
-    state.counters["GFLOPS/s"] = benchmark::Counter(
-        flops / 1e9,
-        benchmark::Counter::kIsIterationInvariantRate,
-        benchmark::Counter::OneK::kIs1000);
-    state.counters["HBM GB/s"] = benchmark::Counter(
-        bytes / 1e9,
-        benchmark::Counter::kIsIterationInvariantRate,
-        benchmark::Counter::OneK::kIs1000);
+    const double bytes = 4.0 * elems * sizeof(float) + 2.0 * static_cast<double>(batch_size) *
+                                                           num_heads * seq_len * seq_len *
+                                                           sizeof(float);
+    state.counters["GFLOPS/s"] =
+        benchmark::Counter(flops / 1e9, benchmark::Counter::kIsIterationInvariantRate,
+                           benchmark::Counter::OneK::kIs1000);
+    state.counters["HBM GB/s"] =
+        benchmark::Counter(bytes / 1e9, benchmark::Counter::kIsIterationInvariantRate,
+                           benchmark::Counter::OneK::kIs1000);
 
     cudaStreamDestroy(stream);
     for (auto* ptr : devs) {
@@ -664,8 +657,8 @@ static void BM_Decode_FP16(benchmark::State& state) {
     // 每 chunk 约 128 个 KV 位置；长序列时展示 Split-KV 并行收益。
     int num_chunks = std::max(1, seq_len / 128);
 
-    size_t q_size = static_cast<size_t>(batch_size) * num_heads * head_dim;         // Q [bh, 1, D]
-    size_t kv_size = static_cast<size_t>(batch_size) * num_heads * seq_len * head_dim; // K/V
+    size_t q_size = static_cast<size_t>(batch_size) * num_heads * head_dim;  // Q [bh, 1, D]
+    size_t kv_size = static_cast<size_t>(batch_size) * num_heads * seq_len * head_dim;  // K/V
     size_t o_size = q_size;
     size_t l_size = static_cast<size_t>(batch_size) * num_heads;
 
@@ -702,8 +695,10 @@ static void BM_Decode_FP16(benchmark::State& state) {
     cudaEventDestroy(ev_start);
     cudaEventDestroy(ev_stop);
     cudaStreamDestroy(stream);
-    for (auto* ptr : devs) cudaFree(ptr);
-    for (auto* ptr : l_bufs) cudaFree(ptr);
+    for (auto* ptr : devs)
+        cudaFree(ptr);
+    for (auto* ptr : l_bufs)
+        cudaFree(ptr);
 }
 
 BENCHMARK(BM_Decode_FP16)
@@ -743,9 +738,9 @@ static void BM_Forward_GridYOverflowSmoke(benchmark::State& state) {
     cudaStreamCreate(&stream);
 
     for (auto _ : state) {
-        auto err = cuflash::flash_attention_forward(d_Q, d_K, d_V, d_O, d_L, batch_size, num_heads,
-                                                    seq_len, head_dim, scale, /*causal=*/false,
-                                                    stream);
+        auto err =
+            cuflash::flash_attention_forward(d_Q, d_K, d_V, d_O, d_L, batch_size, num_heads,
+                                             seq_len, head_dim, scale, /*causal=*/false, stream);
         if (err != cuflash::FlashAttentionError::SUCCESS) {
             state.SkipWithError("flash_attention_forward (grid.y overflow smoke) failed");
             break;
@@ -765,12 +760,11 @@ static void BM_Forward_GridYOverflowSmoke(benchmark::State& state) {
     state.SetLabel("grid.y overflow smoke: bh=" + std::to_string(batch_size * num_heads));
 
     cudaStreamDestroy(stream);
-    for (auto* ptr : devs) cudaFree(ptr);
+    for (auto* ptr : devs)
+        cudaFree(ptr);
 }
 // Smoke test, not a perf benchmark: fixed iteration count so Google Benchmark
 // does not extrapolate a runaway iteration count for the sub-ms kernel.
-BENCHMARK(BM_Forward_GridYOverflowSmoke)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(10);
+BENCHMARK(BM_Forward_GridYOverflowSmoke)->Unit(benchmark::kMillisecond)->Iterations(10);
 
 BENCHMARK_MAIN();

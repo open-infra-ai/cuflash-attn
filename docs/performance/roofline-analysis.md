@@ -230,7 +230,7 @@ $$
 > **注意**：该快照的"理论 HBM 流量"列按旧的"Q/K/V/O 各读一次"模型估算，**已被
 > 第 3.2 节的 K/V 重载模型取代**（固定 tile 下应为 $O(N^2)$ 量级），因此本表的
 > 有效带宽/利用率数值只作为旧快照参考。本仓库实际硬件（RTX 3060 / sm_86）的
-> 权威数据见 [validation-v1.0.md](./validation-v1.0.md)（T5 生成）。测试配置：
+> 权威数据见 [benchmarks.md 的本机实测快照](./benchmarks.md#15-本机实测快照rtx-3060-laptop2026-08-18)。测试配置：
 > batch=1, heads=8, head_dim=64, causal FP16。
 
 | GPU | seq_len | 实测时间 (ms) | 理论 FLOPs | 实测 TFLOPS | 理论 HBM 流量 (GB) | 有效带宽 (GB/s) | 峰值带宽利用率 |
@@ -343,7 +343,7 @@ FlashAttention-2 (参考):        △ @ AI≈O(N),  P≈80+ TFLOPS
 | Roofline Regime | Deep memory-bound, 低效 | Memory-bound | Near ridge point / 部分 compute-bound |
 
 > * 带 * 的行是 v0.4.0 历史快照（非本仓库硬件实测），仅作量级参考；权威实测见
-> [validation-v1.0.md](./validation-v1.0.md)。
+> [benchmarks.md](./benchmarks.md)。
 
 ### 6.3 定性结论
 

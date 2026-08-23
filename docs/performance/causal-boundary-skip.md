@@ -12,7 +12,7 @@ forward kernel（`src/forward/flash_attention_forward_typed.cu` 与
 `src/forward/flash_attention_forward_wmma.cu`）的 causal KV 块循环在加载
 K/V tile 之前，用当前 Q 块最后可见位置做整块跳过判断：
 
-```cuda
+```cpp
 const int q_last = min(q_start + BLOCK_M - 1, seq_len - 1);
 // causal：整块都在"未来"且后续块必然更远 → 直接结束循环
 if (causal && kv_start > q_last) break;

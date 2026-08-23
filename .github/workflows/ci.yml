@@ -108,18 +108,22 @@ jobs:
       matrix:
         include:
           - name: Release, sm_80
+            cache-key: release-sm80
             cuda-arch: "80"
             build-type: Release
             extra-cmake-args: ""
           - name: Release, all architectures
+            cache-key: release-all-architectures
             cuda-arch: "70;75;80;86;89;90"
             build-type: Release
             extra-cmake-args: ""
           - name: Debug, ASan + UBSan
+            cache-key: debug-sanitizers
             cuda-arch: "80"
             build-type: Debug
             extra-cmake-args: "-DENABLE_ASAN=ON -DENABLE_UBSAN=ON"
           - name: Release, RapidCheck properties
+            cache-key: release-rapidcheck
             cuda-arch: "80"
             build-type: Release
             extra-cmake-args: "-DENABLE_RAPIDCHECK=ON"
@@ -138,7 +142,7 @@ jobs:
       - name: Enable ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ${{ matrix.name }}
+          key: ${{ matrix.cache-key }}
           variant: ccache
 
       - name: Configure CMake

@@ -380,7 +380,7 @@ namespace {
 // RAII device buffer freed with cudaFreeAsync so the free is stream-ordered.
 struct AsyncFloatBuffer {
     float* ptr = nullptr;
-    cudaStream_t stream = 0;
+    cudaStream_t stream = nullptr;
 
     FlashAttentionError alloc(size_t elements, cudaStream_t s) {
         stream = s;

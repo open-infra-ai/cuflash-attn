@@ -41,14 +41,14 @@ namespace kernels {
 template<int BLOCK_ROWS, int BLOCK_COLS>
 CUFLASH_EXPORT FlashAttentionError load_tile(const float* src, float* dst, int row_start,
                                              int col_start, int max_rows, int max_cols,
-                                             int src_stride, cudaStream_t stream = 0);
+                                             int src_stride, cudaStream_t stream = nullptr);
 
 /// Load a tile from global memory to a buffer (FP16).
 /// Converts half to float during load for numerical stability.
 template<int BLOCK_ROWS, int BLOCK_COLS>
 CUFLASH_EXPORT FlashAttentionError load_tile(const half* src, float* dst, int row_start,
                                              int col_start, int max_rows, int max_cols,
-                                             int src_stride, cudaStream_t stream = 0);
+                                             int src_stride, cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // Store Operations
@@ -68,14 +68,14 @@ CUFLASH_EXPORT FlashAttentionError load_tile(const half* src, float* dst, int ro
 template<int BLOCK_ROWS, int BLOCK_COLS>
 CUFLASH_EXPORT FlashAttentionError store_tile(const float* src, float* dst, int row_start,
                                               int col_start, int max_rows, int max_cols,
-                                              int dst_stride, cudaStream_t stream = 0);
+                                              int dst_stride, cudaStream_t stream = nullptr);
 
 /// Store a tile from a buffer to global memory (FP16).
 /// Converts float to half during store.
 template<int BLOCK_ROWS, int BLOCK_COLS>
 CUFLASH_EXPORT FlashAttentionError store_tile(const float* src, half* dst, int row_start,
                                               int col_start, int max_rows, int max_cols,
-                                              int dst_stride, cudaStream_t stream = 0);
+                                              int dst_stride, cudaStream_t stream = nullptr);
 
 // -----------------------------------------------------------------------------
 // Round-trip Test Helper
@@ -87,7 +87,7 @@ template<int BLOCK_ROWS, int BLOCK_COLS>
 CUFLASH_EXPORT FlashAttentionError load_store_tile_roundtrip(const float* src, float* dst,
                                                              int row_start, int col_start,
                                                              int max_rows, int max_cols, int stride,
-                                                             cudaStream_t stream = 0);
+                                                             cudaStream_t stream = nullptr);
 
 }  // namespace kernels
 }  // namespace cuflash
