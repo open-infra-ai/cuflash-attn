@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RapidCheck 配置显式启用并链接其 GoogleTest integration target，补齐 `rapidcheck/gtest.h` 的 include 契约。
 - 统一公开 C++ API 默认 stream、实现内部 stream 与 host API smoke test 的空指针表达，满足 `modernize-use-nullptr` 门禁。
 - 将 `markdown-it-mathjax3` 固定到与 VitePress 1.x 兼容的 4.x 系列，恢复文档依赖安装。
+- PyTorch 对照脚本把 NumPy 与 PyTorch 一并视为可选依赖；GPU-less CI 未安装任一依赖时
+  按 CTest 的 `SKIP_RETURN_CODE=77` 跳过，不再在依赖探测前因 import 失败打红全部矩阵。
 - 将不存在的 `validation-v1.0.md` 引用改为实际 benchmark 与测试文档，消除 VitePress 死链。
 - 将未被当前 Shiki 词法包识别的 `cuda` 代码围栏改为等价的 `cpp` 高亮，消除文档构建告警。
 - 格式化 FlashDecoding 实现、测试与 benchmark，使 clang-format 17 门禁可复现通过。

@@ -16,17 +16,17 @@ import os
 import sys
 from typing import Optional, Sequence, Tuple
 
-import numpy as np
-
 try:
+    import numpy as np
     import torch
     import torch.nn.functional as F
 except ModuleNotFoundError as import_error:
+    np = None
     torch = None
     F = None
-    TORCH_IMPORT_ERROR = import_error
+    DEPENDENCY_IMPORT_ERROR = import_error
 else:
-    TORCH_IMPORT_ERROR = None
+    DEPENDENCY_IMPORT_ERROR = None
 
 
 SUCCESS = 0
@@ -737,8 +737,8 @@ def main():
     print("CuFlash-Attn PyTorch Comparison Tests")
     print("=" * 60)
 
-    if TORCH_IMPORT_ERROR is not None:
-        print(f"PyTorch not available, skipping tests: {TORCH_IMPORT_ERROR}")
+    if DEPENDENCY_IMPORT_ERROR is not None:
+        print(f"Optional Python dependency not available, skipping tests: {DEPENDENCY_IMPORT_ERROR}")
         return SKIP
 
     if not torch.cuda.is_available():
