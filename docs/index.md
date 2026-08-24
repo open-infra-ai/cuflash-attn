@@ -20,30 +20,17 @@ hero:
 
 <script setup>
 const stats = [
-  { value: 'v0.5.0', label: '稳定版' },
-  { value: '99.9%', label: '内存节省' },
-  { value: '8.9x', label: '最大加速' },
-  { value: '0', label: '依赖项' }
-]
-
-const memoryBenchmarks = [
-  { seq: '1,024', standard: '4 MB', flash: '8 KB', saved: '99.8%' },
-  { seq: '4,096', standard: '64 MB', flash: '32 KB', saved: '99.95%', highlight: true },
-  { seq: '16,384', standard: '1 GB', flash: '128 KB', saved: '99.99%', highlight: true },
-  { seq: '65,536', standard: '16 GB', flash: '512 KB', saved: '99.97%' }
-]
-
-const throughputBenchmarks = [
-  { config: 'Batch=1, Seq=1024', flash: '45.2 tok/s', standard: '12.1 tok/s', speedup: '3.7x' },
-  { config: 'Batch=8, Seq=1024', flash: '312.5 tok/s', standard: '45.3 tok/s', speedup: '6.9x' },
-  { config: 'Batch=32, Seq=1024', flash: '892.1 tok/s', standard: '98.7 tok/s', speedup: '9.0x', highlight: true }
+  { value: 'v0.5.1', label: '稳定版' },
+  { value: 'FP32/16/BF16', label: '数值路径' },
+  { value: 'WMMA', label: '前向 Tensor Core' },
+  { value: 'C++ / CUDA', label: '最小依赖' }
 ]
 
 const features = [
   {
     icon: '⚡',
     title: 'O(N) 内存',
-    desc: '通过 FlashAttention 分块技术，在单 GPU 上处理 16K+ token 序列。HBM 中不存储 O(N²) 注意力矩阵。',
+    desc: '通过 FlashAttention 分块技术避免在 HBM 中物化 O(N²) 注意力矩阵。',
     link: { text: '算法详解', href: '/cuflash-attn/algorithm' }
   },
   {
@@ -60,8 +47,8 @@ const features = [
   },
   {
     icon: '🎯',
-    title: '多架构覆盖',
-    desc: '针对 Volta 到 Hopper（sm_70 → sm_90）优化。支持 V100、A100、H100 及消费级 GPU。',
+    title: '可配置架构编译',
+    desc: '源码可配置 sm_70 到 sm_90；当前公开结果只以实际归档的硬件与版本为准。',
     link: { text: '基准测试', href: '/cuflash-attn/performance/benchmarks' }
   },
   {
@@ -398,55 +385,12 @@ const features = [
 </div>
 
 <div class="home-benchmark">
-  <h2 class="home-benchmark-title">⚡ 内存效率</h2>
-  <p class="home-benchmark-desc">FlashAttention 将内存复杂度从 O(N²) 降至 O(N)，支持更长的序列训练。</p>
-
-  <div class="home-benchmark-table">
-    <table>
-      <thead>
-        <tr>
-          <th>序列长度</th>
-          <th>标准注意力</th>
-          <th>FlashAttention</th>
-          <th>内存节省</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in memoryBenchmarks" :key="row.seq" :class="{ highlight: row.highlight }">
-          <td>{{ row.seq }}</td>
-          <td>{{ row.standard }}</td>
-          <td class="metric-highlight">{{ row.flash }}</td>
-          <td class="metric-success">{{ row.saved }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="home-benchmark">
-  <h2 class="home-benchmark-title">🚀 吞吐量对比</h2>
-  <p class="home-benchmark-desc">在 NVIDIA A100 80GB 上测试，FP16 精度，启用因果掩码。</p>
-
-  <div class="home-benchmark-table">
-    <table>
-      <thead>
-        <tr>
-          <th>配置</th>
-          <th>FlashAttention</th>
-          <th>标准注意力</th>
-          <th>加速比</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in throughputBenchmarks" :key="row.config" :class="{ highlight: row.highlight }">
-          <td>{{ row.config }}</td>
-          <td class="metric-highlight">{{ row.flash }}</td>
-          <td>{{ row.standard }}</td>
-          <td class="metric-success">{{ row.speedup }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h2 class="home-benchmark-title">验证状态</h2>
+  <p class="home-benchmark-desc">
+    公开数字只在原始命令、硬件/软件、commit 与结果产物齐全时引用。历史跨 GPU 表格已隔离为不可审计快照；
+    当前优先级是以同一输入契约复测 PyTorch SDPA、官方 FlashAttention 与本实现，并归档 JSON 和 profiler 产物。
+  </p>
+  <a href="/performance/benchmarks" class="home-feature-link">查看结果发布门槛 →</a>
 </div>
 
 <div class="home-quickstart">
@@ -507,7 +451,7 @@ lib.cuflash_attention_forward_f32(
   </a>
   <a href="/performance/benchmarks" class="home-doc-link">
     <span class="home-doc-link-title">基准测试</span>
-    <span class="home-doc-link-desc">可复现的性能数据</span>
+    <span class="home-doc-link-desc">本机快照与正式结果发布门槛</span>
   </a>
   <a href="/research/related-work" class="home-doc-link">
     <span class="home-doc-link-title">相关工作</span>

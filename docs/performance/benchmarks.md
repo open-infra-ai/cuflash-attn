@@ -1,14 +1,19 @@
-# 基准测试
+# 基准测试：当前本机快照与复验协议
 
-> **数据快照**: 2026-08-18（RTX 3060 Laptop 本机实测，commit `6860cbc`）
-> **历史快照**: v0.4.0（2026-04-15 A100-40GB 实测）—— 第 2–5 节的
-> V100/A100/H100 数据为历史快照，当前复测数据见 [1.5 本机实测快照](#15-本机实测快照rtx-3060-laptop2026-08-18)。
-> **测试者**: 个人维护项目（open-infra-ai）
-> **免责声明**: 以下数据基于参考级（reference）CUDA 实现，未使用 CUTLASS 或 cuDNN 优化管线。数值仅用于算法正确性与性能可复现性验证，**不代表生产级性能上限**。
+> **证据状态（2026-08-24）**：仓库没有保存 V100/A100/H100 表格对应的原始 JSON、
+> Nsight 报告或 Release 附件。因此第 2–5 节中的跨 GPU 数字是**不可审计历史快照**：
+> 不得出现在 README 首页、Release、简历、面试数字卡或性能结论中，也不得用于横向比较。
+>
+> 第 1.5 节保留 RTX 3060 Laptop 的本机测量上下文，供重新执行 benchmark 时做 sanity
+> check；它同样没有成套原始 JSON，不能冒充正式跨硬件报告。下一份可引用结果必须归档
+> 硬件/软件/commit、Google Benchmark JSON、命令、原始日志和 nsys/ncu 产物。
+>
+> 本仓库是参考级 CUDA 实现，未接入 CUTLASS 或 cuDNN 优化管线；即使将来产出正式结果，
+> 也不代表生产级性能上限。
 
 ---
 
-## 1. 测试环境与方法
+## 1. 本机快照与未来复验协议
 
 ### 1.1 硬件平台
 
@@ -48,9 +53,10 @@ cmake --preset release \
 cmake --build --preset release --target cuflash_attn_bench
 ```
 
-### 1.5 本机实测快照（RTX 3060 Laptop，2026-08-18）
+### 1.5 本机测量快照（RTX 3060 Laptop，2026-08-18，非正式结果包）
 
-> 本节为**当前版本**在可用 GPU 上的实测快照，命令与配置可直接复现。
+> 本节保留当前可执行的本机测量上下文，但原始 JSON 尚未随仓库归档；它只用于
+> sanity check，不可替代正式结果包。
 
 **环境**：
 
@@ -98,12 +104,12 @@ cmake --preset release && cmake --build --preset release -j
 | 4,096   | **128**  | 1160      | 1141      | 994       |
 
 > 说明：本次为 RTX 3060 Laptop（`sm_86`，约 220 GB/s 显存带宽）单机实测，
-> 与第 2–5 节 V100/A100/H100 历史快照**不可直接横向比较**；复测 A100/H100
-> 数据需在该机型上按上方命令重跑（列入 ROADMAP）。
+> 与第 2–5 节不可审计历史快照**不可直接横向比较**；A100/H100 数据必须在该机型上按
+> 同一协议重跑并归档原始产物后，才可进入正式报告。
 
 ---
 
-## 2. 多维度 Benchmark 矩阵
+## 2. 不可审计历史快照：多维度 Benchmark 矩阵（禁止引用）
 
 ### 2.1 端到端前向传播（Forward, FP16, Causal）
 
@@ -151,7 +157,7 @@ cmake --preset release && cmake --build --preset release -j
 
 ---
 
-## 3. 与 PyTorch SDPA 的速度对比
+## 3. 不可审计历史快照：与 PyTorch SDPA 的速度对比（禁止引用）
 
 PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先调用 FlashAttention-2（通过 `memory_efficient` 后端）。此处以 **A100-40GB、FP16、causal、head_dim=64** 为基准，对比端到端前向耗时。
 
@@ -179,7 +185,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ---
 
-## 4. 内存占用对比
+## 4. 不可审计历史快照：内存占用对比（禁止引用）
 
 ### 4.1 峰值显存（Forward + Backward 单步）
 
@@ -206,7 +212,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ---
 
-## 5. 不同 GPU 架构的 Scaling 分析
+## 5. 不可审计历史快照：不同 GPU 架构的 Scaling 分析（禁止引用）
 
 ### 5.1 理论峰值对比
 
@@ -251,7 +257,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ---
 
-## 6. 可复现的 Benchmark 命令
+## 6. 未来正式结果的复验命令
 
 ### 6.1 本地运行（需 CUDA GPU）
 
@@ -347,15 +353,19 @@ if __name__ == "__main__":
 
 ---
 
-## 7. 数据汇总与速查
+## 7. 正式结果发布门槛
 
-| 场景 | 推荐 GPU | 最大 seq_len (batch=1, heads=8, 40GB) | 预期性能 |
-|------|---------|:-------------------------------------:|---------|
-| 原型验证 / 教学 | V100    | ~16K                                  | 参考级   |
-| 主流训练 / 推理  | A100    | ~64K                                  | 良好     |
-| 长上下文 LLM    | H100    | ~128K+                                | 优秀*    |
+在 L40S、A100 或其他云 GPU 上发布新的性能数字前，必须先通过数值正确性测试，并将以下
+产物与结果页一并提交：
 
-> **\***: 需配合 FlashAttention-3 级别的 kernel 重写（TMA、WGMMA、序列并行）才能释放 H100 全部潜力。本实现当前为 v0.4.0 基线，H100 数据为 sm_90 兼容编译后自然运行结果。
+- `metadata.json`：GPU、显存、驱动、CUDA、commit、编译参数和输入矩阵；
+- Google Benchmark 的原始 JSON 与完整 `stdout.log`；
+- PyTorch SDPA 或官方 FlashAttention 对照的独立命令、版本与输入契约；
+- nsys timeline 与 ncu 指标（若云环境未开放权限，明确记录限制，不用推测替代）；
+- 包含失败形状、OOM、数值误差和低于噪声优化的报告。
+
+不同 GPU 的结果分目录和分表展示；禁止把不同架构、不同精度、不同实现版本的数据拼成
+同一加速比。
 
 ---
 
@@ -363,6 +373,6 @@ if __name__ == "__main__":
 
 | 版本 | 日期 | 变更说明 |
 |------|------|---------|
-| v0.5.0+ | 2026-08-18 | 新增 RTX 3060 Laptop 本机实测快照（commit `6860cbc`），补充 head_dim=128 数据；历史 V100/A100/H100 数据标注为 v0.4.0 快照 |
-| v0.5.0 | 2026-08-05 | 文档中文化、URL 结构扁平化；数据快照沿用 v0.4.0 实测 |
-| v0.4.0 | 2026-04-15 | 初始 benchmark 文档，基于 A100-40GB 实测，其余为理论外推或 TBD |
+| v0.5.1 | 2026-08-24 | 跨 GPU 历史表格隔离为不可审计快照；首页撤下未经原始产物支持的数字，新增正式结果发布门槛 |
+| v0.5.0+ | 2026-08-18 | 新增 RTX 3060 Laptop 本机测量上下文（commit `6860cbc`），补充 head_dim=128 数据 |
+| v0.4.0 | 2026-04-15 | 初始 benchmark 文档；跨 GPU 数字未保留完整原始产物，现已禁止引用 |
