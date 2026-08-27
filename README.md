@@ -114,7 +114,7 @@ docker build -t cuflash .
 docker run --gpus all -it cuflash
 
 # 容器内运行基准测试
-./cuflash_attn_bench
+./cuflash_bench
 ```
 
 ### 第一个 C++ 程序
@@ -186,7 +186,7 @@ import numpy as np
 import torch
 
 # 加载动态库
-lib = ctypes.CDLL("./build/release/libcuflash_attn.so")
+lib = ctypes.CDLL("./build/release/libcuflash.so")
 
 # 定义 API
 lib.cuflash_attention_forward_f32.argtypes = [
@@ -238,7 +238,7 @@ FlashAttention 通过分块与在线 softmax 避免物化完整注意力矩阵�
 ```bash
 cmake --preset release
 cmake --build --preset release
-./build/release/cuflash_attn_bench
+./build/release/cuflash_bench
 ```
 
 ---

@@ -43,7 +43,7 @@ if (causal && kv_start > q_last) break;
 复现命令：
 
 ```bash
-./build/release/cuflash_attn_bench --benchmark_filter='Forward_Causal'
+./build/release/cuflash_bench --benchmark_filter='Forward_Causal'
 ```
 
 ## 非 causal 参考（FP16，head_dim=64）
@@ -59,7 +59,7 @@ if (causal && kv_start > q_last) break;
 复现命令：
 
 ```bash
-./build/release/cuflash_attn_bench --benchmark_filter='Forward_FP16'
+./build/release/cuflash_bench --benchmark_filter='Forward_FP16'
 ```
 
 ## 结论（诚实记录）

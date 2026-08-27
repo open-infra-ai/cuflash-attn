@@ -46,10 +46,10 @@ WORKDIR /workspace/cuflash
 
 # Bring over only what is needed to run: the shared library, the test and
 # benchmark binaries, and the public headers.
-COPY --from=builder /src/build/release/libcuflash_attn.so ./
-COPY --from=builder /src/build/release/cuflash_attn_tests ./
-COPY --from=builder /src/build/release/cuflash_attn_bench ./
-COPY --from=builder /src/build/release/cuflash_attn_api_smoke ./
+COPY --from=builder /src/build/release/libcuflash.so ./
+COPY --from=builder /src/build/release/cuflash_tests ./
+COPY --from=builder /src/build/release/cuflash_bench ./
+COPY --from=builder /src/build/release/cuflash_api_smoke ./
 COPY --from=builder /src/include ./include
 
 ENV LD_LIBRARY_PATH=/workspace/cuflash:${LD_LIBRARY_PATH}

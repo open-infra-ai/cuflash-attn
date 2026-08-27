@@ -1,12 +1,12 @@
 """
-Python binding example for CuFlash-Attn using ctypes.
+Python binding example for cuflash using ctypes.
 
-This example demonstrates how to call the CuFlash-Attn C API from Python
+This example demonstrates how to call the cuflash C API from Python
 without requiring PyTorch as a dependency.
 
 Requirements:
     - CUDA-capable GPU
-    - Built libcuflash_attn.so library
+    - Built libcuflash.so library
     - numpy
     - cupy (optional, for GPU array management)
 
@@ -23,13 +23,13 @@ import numpy as np
 
 
 def find_library():
-    """Find the CuFlash-Attn shared library."""
+    """Find the cuflash shared library."""
     # Try common locations
     possible_paths = [
-        Path(__file__).parent.parent / "build" / "release" / "libcuflash_attn.so",
-        Path(__file__).parent.parent / "build" / "debug" / "libcuflash_attn.so",
-        Path("/usr/local/lib/libcuflash_attn.so"),
-        Path("/usr/lib/libcuflash_attn.so"),
+        Path(__file__).parent.parent / "build" / "release" / "libcuflash.so",
+        Path(__file__).parent.parent / "build" / "debug" / "libcuflash.so",
+        Path("/usr/local/lib/libcuflash.so"),
+        Path("/usr/lib/libcuflash.so"),
     ]
     
     for path in possible_paths:
@@ -38,18 +38,18 @@ def find_library():
     
     # Try system library path
     try:
-        return util.find_library("cuflash_attn")
+        return util.find_library("cuflash")
     except Exception:
         pass
     
     raise RuntimeError(
-        "Could not find libcuflash_attn.so. "
+        "Could not find libcuflash.so. "
         "Please build the project first: cmake --preset release && cmake --build --preset release"
     )
 
 
 def load_library(lib_path=None):
-    """Load the CuFlash-Attn shared library and set up function signatures."""
+    """Load the cuflash shared library and set up function signatures."""
     if lib_path is None:
         lib_path = find_library()
     
@@ -101,7 +101,7 @@ def load_library(lib_path=None):
 
 
 class CuFlashAttn:
-    """Python wrapper for CuFlash-Attn library."""
+    """Python wrapper for cuflash library."""
     
     def __init__(self, lib_path=None):
         self.lib = load_library(lib_path)
@@ -110,7 +110,7 @@ class CuFlashAttn:
         """Check error code and raise exception if needed."""
         if error_code != 0:
             error_msg = self.lib.cuflash_error_string(error_code)
-            raise RuntimeError(f"CuFlash-Attn error {error_code}: {error_msg.decode('utf-8')}")
+            raise RuntimeError(f"cuflash error {error_code}: {error_msg.decode('utf-8')}")
     
     def forward(self, Q, K, V, causal=False, scale=None):
         """
@@ -159,7 +159,7 @@ class CuFlashAttn:
             import torch
 
             if not torch.cuda.is_available():
-                raise RuntimeError("CUDA is required for CuFlash-Attn")
+                raise RuntimeError("CUDA is required for cuflash")
 
             O = torch.empty_like(Q)
             L = torch.empty((B, H, N), dtype=torch.float32, device=Q.device)
@@ -183,7 +183,7 @@ class CuFlashAttn:
 def demo_numpy_cuda():
     """Demo using NumPy with CUDA via CuPy."""
     print("=" * 60)
-    print("Demo: CuFlash-Attn with CuPy")
+    print("Demo: cuflash with CuPy")
     print("=" * 60)
     
     try:
@@ -214,7 +214,7 @@ def demo_numpy_cuda():
 
 
 def demo_pytorch_comparison():
-    """Demo comparing CuFlash-Attn with PyTorch native attention."""
+    """Demo comparing cuflash with PyTorch native attention."""
     print("=" * 60)
     print("Demo: Comparison with PyTorch Native Attention")
     print("=" * 60)
@@ -242,8 +242,8 @@ def demo_pytorch_comparison():
     K = torch.randn(B, H, N, D, dtype=torch.float32, device='cuda')
     V = torch.randn(B, H, N, D, dtype=torch.float32, device='cuda')
     
-    # CuFlash-Attn forward
-    print("Running CuFlash-Attn forward pass...")
+    # cuflash forward
+    print("Running cuflash forward pass...")
     O_flash, L = attn.forward(Q, K, V, causal=True)
     
     # PyTorch reference (causal mask)
@@ -271,7 +271,7 @@ def demo_pytorch_comparison():
 def benchmark_performance():
     """Simple performance benchmark."""
     print("=" * 60)
-    print("Benchmark: CuFlash-Attn Performance")
+    print("Benchmark: cuflash Performance")
     print("=" * 60)
     
     try:
@@ -321,7 +321,7 @@ def benchmark_performance():
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)
-    print("CuFlash-Attn Python Binding Examples")
+    print("cuflash Python Binding Examples")
     print("=" * 60 + "\n")
     
     try:

@@ -75,7 +75,7 @@ Split-KV 的并行度摊薄。复现：
 
 ```bash
 cmake --preset release && cmake --build --preset release -j
-./build/release/cuflash_attn_bench --benchmark_filter="BM_Decode_FP16"
+./build/release/cuflash_bench --benchmark_filter="BM_Decode_FP16"
 ```
 
 ## 6. 边界与后续

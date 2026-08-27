@@ -1,5 +1,5 @@
 // Error Handling Tests
-// Feature: cuflash-attn, Property 7: 无效输入错误处理
+// Feature: cuflash, Property 7: 无效输入错误处理
 
 #include <gtest/gtest.h>
 #if CUFLASH_ENABLE_RAPIDCHECK
@@ -251,7 +251,7 @@ TEST(ErrorHandlingTest, ErrorStrings) {
 
 #if CUFLASH_ENABLE_RAPIDCHECK
 // Property test: Invalid inputs should return errors, not crash
-// Feature: cuflash-attn, Property 7: 无效输入错误处理
+// Feature: cuflash, Property 7: 无效输入错误处理
 // Validates: Requirements 7.3
 RC_GTEST_PROP(ErrorHandlingProperty, InvalidInputsReturnErrors, ()) {
     // Generate invalid dimension scenarios

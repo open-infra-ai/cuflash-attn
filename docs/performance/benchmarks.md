@@ -50,7 +50,7 @@
 cmake --preset release \
   -DCUFASH_ATTN_BENCHMARKS=ON \
   -DCUFASH_ATTN_ARCHS="70;80;90"
-cmake --build --preset release --target cuflash_attn_bench
+cmake --build --preset release --target cuflash_bench
 ```
 
 ### 1.5 本机测量快照（RTX 3060 Laptop，2026-08-18，非正式结果包）
@@ -73,7 +73,7 @@ cmake --build --preset release --target cuflash_attn_bench
 
 ```bash
 cmake --preset release && cmake --build --preset release -j
-./build/release/cuflash_attn_bench
+./build/release/cuflash_bench
 ```
 
 **前向（Forward，非 causal，FP16 / BF16，Tensor Core 路径）**，单位 ms：
@@ -268,17 +268,17 @@ cd cuflash
 
 # 2. 使用 CMake Preset 构建 benchmark 目标
 cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON
-cmake --build --preset release --target cuflash_attn_bench
+cmake --build --preset release --target cuflash_bench
 
 # 3. 运行全量 benchmark（约 20–30 分钟）
-./build/release/bench/cuflash_attn_bench \
+./build/release/bench/cuflash_bench \
   --benchmark_time_unit=ms \
   --benchmark_repetitions=30 \
   --benchmark_report_aggregates_only=true \
   --benchmark_filter="BM_FlashAttention_Forward.*"
 
 # 4. 导出 JSON 供后续分析
-./build/release/bench/cuflash_attn_bench \
+./build/release/bench/cuflash_bench \
   --benchmark_out=results.json \
   --benchmark_out_format=json
 ```
@@ -304,9 +304,9 @@ RUN git clone https://github.com/google/benchmark.git /tmp/benchmark \
 WORKDIR /workspace
 COPY . /workspace/cuflash
 RUN cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON \
-    && cmake --build --preset release --target cuflash_attn_bench
+    && cmake --build --preset release --target cuflash_bench
 
-CMD ["./build/release/bench/cuflash_attn_bench"]
+CMD ["./build/release/bench/cuflash_bench"]
 ```
 
 ```bash

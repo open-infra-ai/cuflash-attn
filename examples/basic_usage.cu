@@ -1,4 +1,4 @@
-// Basic usage example for CuFlash-Attn
+// Basic usage example for cuflash
 
 #include <cuda_runtime.h>
 
@@ -17,7 +17,7 @@ int main() {
     const int head_dim = 64;
     const float scale = 1.0f / std::sqrt(static_cast<float>(head_dim));
 
-    std::cout << "CuFlash-Attn Example" << std::endl;
+    std::cout << "cuflash Example" << std::endl;
     std::cout << "===================" << std::endl;
     std::cout << "batch_size: " << batch_size << std::endl;
     std::cout << "num_heads: " << num_heads << std::endl;

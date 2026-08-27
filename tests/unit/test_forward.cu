@@ -1,5 +1,5 @@
 // Forward Pass Tests
-// Feature: cuflash-attn, Property 1: 前向传播数值等价性
+// Feature: cuflash, Property 1: 前向传播数值等价性
 
 #include <gtest/gtest.h>
 #if CUFLASH_ENABLE_RAPIDCHECK
@@ -449,7 +449,7 @@ TEST(ForwardTest, GridYOverflowSmoke) {
 
 #if CUFLASH_ENABLE_RAPIDCHECK
 // Property test: Forward pass numerical equivalence
-// Feature: cuflash-attn, Property 1: 前向传播数值等价性
+// Feature: cuflash, Property 1: 前向传播数值等价性
 // Validates: Requirements 1.1, 1.2, 1.5, 7.5, 8.1
 RC_GTEST_PROP(ForwardProperty, NumericalEquivalence, ()) {
     int batch_size = *rc::gen::inRange(1, 3);

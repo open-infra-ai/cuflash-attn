@@ -1,5 +1,5 @@
 // Backward Pass Tests
-// Feature: cuflash-attn, Property 2: 反向传播梯度等价性
+// Feature: cuflash, Property 2: 反向传播梯度等价性
 
 #include <gtest/gtest.h>
 #if CUFLASH_ENABLE_RAPIDCHECK
@@ -287,7 +287,7 @@ TEST(BackwardTest, CausalMultiHeadHeadDim128) {
 
 #if CUFLASH_ENABLE_RAPIDCHECK
 // Property test: Backward pass gradient equivalence
-// Feature: cuflash-attn, Property 2: 反向传播梯度等价性
+// Feature: cuflash, Property 2: 反向传播梯度等价性
 // Validates: Requirements 2.1, 2.3, 2.4, 8.2
 RC_GTEST_PROP(BackwardProperty, GradientEquivalence, ()) {
     int batch_size = 1;

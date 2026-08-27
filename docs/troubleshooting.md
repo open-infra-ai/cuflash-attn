@@ -122,7 +122,7 @@ undefined reference to `cuflash::flash_attention_forward'
 
 1. **验证库构建：**
    ```bash
-   ls -la build/release/libcuflash_attn*
+   ls -la build/release/libcuflash*
    ```
 
 2. **设置库路径：**
@@ -132,7 +132,7 @@ undefined reference to `cuflash::flash_attention_forward'
 
 3. **在您的项目中正确链接：**
    ```cmake
-   target_link_libraries(your_target cuflash_attn)
+   target_link_libraries(your_target cuflash)
    ```
 
 ---

@@ -1,5 +1,5 @@
 // Data Type Support Tests
-// Feature: cuflash-attn, Property 6: 数据类型支持
+// Feature: cuflash, Property 6: 数据类型支持
 
 #include <gtest/gtest.h>
 #if CUFLASH_ENABLE_RAPIDCHECK
@@ -753,7 +753,7 @@ TEST(DTypeTest, BF16BackwardMatchesFP32) {
 
 #if CUFLASH_ENABLE_RAPIDCHECK
 // Property test: FP16 results should be close to FP32
-// Feature: cuflash-attn, Property 6: 数据类型支持
+// Feature: cuflash, Property 6: 数据类型支持
 // Validates: Requirements 7.4
 RC_GTEST_PROP(DTypeProperty, FP16ClosesToFP32, ()) {
     int batch_size = 1;

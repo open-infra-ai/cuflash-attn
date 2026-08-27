@@ -421,7 +421,7 @@ auto err = cuflash::flash_attention_forward(
 
 ```python [Python 绑定]
 import ctypes
-lib = ctypes.CDLL("./build/release/libcuflash_attn.so")
+lib = ctypes.CDLL("./build/release/libcuflash.so")
 
 lib.cuflash_attention_forward_f32(
     q_ptr, k_ptr, v_ptr, o_ptr, l_ptr,

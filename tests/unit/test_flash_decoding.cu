@@ -1,5 +1,5 @@
 // FlashDecoding (Split-KV) Forward Tests
-// Feature: cuflash-attn, E3 —— decode 阶段 KV 分块并行 + 跨块归约。
+// Feature: cuflash, E3 —— decode 阶段 KV 分块并行 + 跨块归约。
 //
 // 验证：
 //   1. flash_attention_decode 输出与 CPU 参考逐元素一致；

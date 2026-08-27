@@ -1,5 +1,5 @@
 // Causal Mask Tests
-// Feature: cuflash-attn, Property 5: 因果掩码正确性
+// Feature: cuflash, Property 5: 因果掩码正确性
 
 #include <gtest/gtest.h>
 #if CUFLASH_ENABLE_RAPIDCHECK
@@ -99,7 +99,7 @@ TEST(CausalMaskTest, FutureIndependence) {
 
 #if CUFLASH_ENABLE_RAPIDCHECK
 // Property test: Causal mask correctness
-// Feature: cuflash-attn, Property 5: 因果掩码正确性
+// Feature: cuflash, Property 5: 因果掩码正确性
 // Validates: Requirements 5.1
 RC_GTEST_PROP(CausalMaskProperty, FutureIndependenceProperty, ()) {
     int batch_size = 1;

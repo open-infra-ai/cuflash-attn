@@ -22,7 +22,7 @@ execute_process(
   RESULT_VARIABLE install_result
 )
 if(NOT install_result EQUAL 0)
-  message(FATAL_ERROR "Failed to install cuflash_attn from ${project_build_dir}")
+  message(FATAL_ERROR "Failed to install cuflash from ${project_build_dir}")
 endif()
 
 set(configure_args

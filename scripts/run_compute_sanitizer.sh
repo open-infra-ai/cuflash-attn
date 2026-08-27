@@ -13,7 +13,7 @@ set -euo pipefail
 
 BUILD_DIR="${1:-build}"
 SANITIZER="${COMPUTE_SANITIZER:-compute-sanitizer}"
-TEST_BIN="$BUILD_DIR/cuflash_attn_tests"
+TEST_BIN="$BUILD_DIR/cuflash_tests"
 
 if ! command -v "$SANITIZER" >/dev/null 2>&1; then
     echo "error: $SANITIZER not found on PATH (install the CUDA toolkit)" >&2

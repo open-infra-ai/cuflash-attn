@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed（构建接口，breaking）
+
+- 仓库重命名为 `open-infra-ai/cuflash`，构建产物全面统一为 `cuflash` 命名：
+  CMake target `cuflash_attn` → `cuflash`（下游链接改为 `cuflash::cuflash`）、
+  动态库 `libcuflash_attn.so` → `libcuflash.so`、测试/基准二进制
+  `cuflash_attn_tests`/`cuflash_attn_bench`/`cuflash_attn_api_smoke` →
+  `cuflash_tests`/`cuflash_bench`/`cuflash_api_smoke`、CMake 包配置
+  `cuflash_attnConfig.cmake` → `cuflashConfig.cmake`、release asset
+  `cuflash-attn-${version}-*.tar.gz` → `cuflash-${version}-*.tar.gz`。
+  公开 C++ 命名空间 `cuflash::`、头文件路径 `include/cuflash/`、C API 与
+  `CUFLASH_*` 宏保持不变。
+
 ## [0.5.1] - 2026-08-23
 
 ### Changed

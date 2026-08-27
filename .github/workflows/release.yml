@@ -78,7 +78,7 @@ jobs:
       - name: Package release artifact
         run: |
           version="${{ steps.version.outputs.version }}"
-          asset="cuflash-attn-${version}-linux-x86_64.tar.gz"
+          asset="cuflash-${version}-linux-x86_64.tar.gz"
           tar -C staging -czf "${asset}" cuflash
           sha256sum "${asset}" > "${asset}.sha256"
           echo "asset=${asset}" >> "$GITHUB_ENV"

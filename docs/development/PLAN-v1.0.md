@@ -161,7 +161,7 @@ for (auto _ : state) {
 给 benchmark target 增加私有 include 目录，`CMakeLists.txt` 中：
 
 ```cmake
-target_include_directories(cuflash_attn_bench PRIVATE
+target_include_directories(cuflash_bench PRIVATE
     ${CMAKE_SOURCE_DIR}/src/kernels
     ${CMAKE_SOURCE_DIR}/src
 )
@@ -262,7 +262,7 @@ if (!backward) {
 - [ ] `BM_Backward_*` 不再使用 2.5× 模型。
 - [ ] 运行：
   ```bash
-  ./build/release/cuflash_attn_bench \
+  ./build/release/cuflash_bench \
     --benchmark_filter='BM_Forward_FP32/1024/64|BM_Forward_FP16/1024/64|BM_Backward_FP32/1024/64'
   ```
   输出时间与事件计时一致，无 `-nan` 或异常值。
@@ -325,7 +325,7 @@ Q 读 1 次 + O 写 1 次 + (K+V) × ceil(N / BLOCK_M)
 | `docs/project-status.md` | “保留范围”加上 BF16；去掉与 README 矛盾的表述 |
 | `docs/api-reference.md` | 补充 BF16 前向/反向签名，或明确链接到 `flash_attention.h` 为唯一权威 |
 | `docs/architecture.md` | 删除不存在的 `flash_attention_c.h`、`forward_kernel_f32.cu` 等；目录树改为真实文件；block 大小改为实际 64/64、32/32（backward 32/32、16/32 等） |
-| `docs/building.md` | 修正测试二进制路径（如 `build/release/cuflash_attn_tests`）、PyTorch 测试路径（`tests/integration/test_pytorch_comparison.py`）、benchmark CMake 变量（`BUILD_BENCHMARKS`、`CMAKE_CUDA_ARCHITECTURES`） |
+| `docs/building.md` | 修正测试二进制路径（如 `build/release/cuflash_tests`）、PyTorch 测试路径（`tests/integration/test_pytorch_comparison.py`）、benchmark CMake 变量（`BUILD_BENCHMARKS`、`CMAKE_CUDA_ARCHITECTURES`） |
 | `docs/guide/quick-start.md` | CUDA 最低版本与 README/CHANGELOG 对齐；修正测试路径 |
 | `docs/design/design-decisions.md` | ADR-2 改为“低精度输入、FP32 accumulate；WMMA 前向的 tile 保持输入精度” |
 | `docs/design/kernel-deep-dive.md` | 增加 WMMA 路径说明，或明确该文档只描述 scalar 路径 |
@@ -384,7 +384,7 @@ Q 读 1 次 + O 写 1 次 + (K+V) × ceil(N / BLOCK_M)
 - [ ] 非整除 N 的 forward/backward 在三 dtype 下通过。
 - [ ] 运行：
   ```bash
-  ./build/release/cuflash_attn_tests --gtest_filter='*NonDivisible*:*SeqLenOne*'
+  ./build/release/cuflash_tests --gtest_filter='*NonDivisible*:*SeqLenOne*'
   ```
   全部绿色。
 
@@ -477,7 +477,7 @@ python3 tests/integration/test_pytorch_comparison.py
 cmake --preset release
 cmake --build --preset release -j
 
-./build/release/cuflash_attn_bench \
+./build/release/cuflash_bench \
   --benchmark_time_unit=ms \
   --benchmark_min_time=0.2s \
   --benchmark_out=benchmark_v1.0.json \
@@ -576,7 +576,7 @@ git tag -a v1.0.0 -m "v1.0.0: verified reference implementation"
    ```bash
    ncu --set full --launch-count 1 --launch-skip 1 \
      --kernel-name 'regex:flash_attention' \
-     ./build/release/cuflash_attn_bench \
+     ./build/release/cuflash_bench \
      --benchmark_filter='BM_Forward_FP16/4096/64'
    ```
    如果 ncu 无权限，改用 nsys 或至少 CUDA event 对比。

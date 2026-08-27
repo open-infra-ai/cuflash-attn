@@ -2,11 +2,11 @@
 from __future__ import annotations
 
 """
-PyTorch Comparison Tests for CuFlash-Attn
-Feature: cuflash-attn
+PyTorch Comparison Tests for cuflash
+Feature: cuflash
 Validates: Requirements 8.4
 
-This script compares the CuFlash-Attn implementation against PyTorch's
+This script compares the cuflash implementation against PyTorch's
 scaled_dot_product_attention for numerical correctness by invoking the
 compiled library directly through a small C ABI wrapper.
 """
@@ -165,11 +165,11 @@ def _candidate_library_paths() -> Sequence[str]:
         candidates.append(explicit)
 
     if sys.platform.startswith("win"):
-        names = ["cuflash_attn.dll", "libcuflash_attn.dll"]
+        names = ["cuflash.dll", "libcuflash.dll"]
     elif sys.platform == "darwin":
-        names = ["libcuflash_attn.dylib"]
+        names = ["libcuflash.dylib"]
     else:
-        names = ["libcuflash_attn.so"]
+        names = ["libcuflash.so"]
 
     preset_dirs = ["default", "release", "release-fast-math", "minimal", "Release", "Debug"]
     for name in names:
@@ -734,7 +734,7 @@ def test_different_shapes(library: CuFlashLibrary):
 def main():
     """Run all tests."""
     print("=" * 60)
-    print("CuFlash-Attn PyTorch Comparison Tests")
+    print("cuflash PyTorch Comparison Tests")
     print("=" * 60)
 
     if DEPENDENCY_IMPORT_ERROR is not None:
