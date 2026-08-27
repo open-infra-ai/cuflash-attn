@@ -1,6 +1,6 @@
 # 故障排除指南
 
-使用 CuFlash-Attn 时的常见问题和解决方案。
+使用 cuflash 时的常见问题和解决方案。
 
 ---
 
@@ -421,4 +421,4 @@ switch (err) {
 - [API 参考](api-reference.md)
 - [构建指南](building.md)
 - [算法文档](algorithm.md)
-- [GitHub Issues](https://github.com/open-infra-ai/cuflash-attn/issues)
+- [GitHub Issues](https://github.com/open-infra-ai/cuflash/issues)

@@ -1,4 +1,4 @@
-# CuFlash-Attn v1.0 开发计划（Phase A/C/D，Phase B 跳过）
+# cuflash v1.0 开发计划（Phase A/C/D，Phase B 跳过）
 
 > 状态：v1.0 计划草稿（归档），尚未执行；后续 cuflash 优化任务以组织级 PHASE2_PLAN.md 的 E2 为准。
 
@@ -14,7 +14,7 @@
 2. 不要追求追平 FlashAttention-2/3，不要引入 CUTLASS、TMA/WGMMA、backward WMMA。
 3. 每个任务完成后必须执行：
    ```bash
-   cd /home/shane/github/aicl/cuflash-attn
+   cd /home/shane/github/aicl/cuflash
    cmake --preset release
    cmake --build --preset release -j
    ctest --preset release --output-on-failure

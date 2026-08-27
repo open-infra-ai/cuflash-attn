@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clean build artifacts and caches for CuFlash-Attn
+# Clean build artifacts and caches for cuflash
 # Usage: ./scripts/clean.sh [--dry-run]
 
 set -e

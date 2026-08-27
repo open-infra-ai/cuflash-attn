@@ -1,6 +1,6 @@
 # API 参考
 
-CuFlash-Attn 提供简洁的 C++ API，所有函数和类型定义在 `cuflash` 命名空间中。
+cuflash 提供简洁的 C++ API，所有函数和类型定义在 `cuflash` 命名空间中。
 
 ---
 

@@ -1,6 +1,6 @@
 # Domain Context
 
-CuFlash-Attn 是一个 CUDA C++ FlashAttention 实现库。本文档定义核心领域术语，供架构讨论和代码审查使用。
+cuflash 是一个 CUDA C++ FlashAttention 实现库。本文档定义核心领域术语，供架构讨论和代码审查使用。
 
 ## Core Concepts
 

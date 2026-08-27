@@ -1,6 +1,6 @@
 # 项目状态
 
-CuFlash-Attn 当前维护为 **稳定的 v0.5.0 参考实现**，适合学习、审计与轻量集成。
+cuflash 当前维护为 **稳定的 v0.5.0 参考实现**，适合学习、审计与轻量集成。
 
 ## 保留范围
 
@@ -25,8 +25,8 @@ CuFlash-Attn 当前维护为 **稳定的 v0.5.0 参考实现**，适合学习、
 - [快速开始](/guide/quick-start)
 - [API 参考](/api-reference)
 - [系统架构](/architecture)
-- [仓库 README](https://github.com/open-infra-ai/cuflash-attn/blob/master/README.md)
-- [CHANGELOG.md](https://github.com/open-infra-ai/cuflash-attn/blob/master/CHANGELOG.md)
+- [仓库 README](https://github.com/open-infra-ai/cuflash/blob/master/README.md)
+- [CHANGELOG.md](https://github.com/open-infra-ai/cuflash/blob/master/CHANGELOG.md)
 
 ## 验证边界
 

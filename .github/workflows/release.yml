@@ -73,13 +73,13 @@ jobs:
       # Install into a staging prefix so the artifact carries the library, the
       # public headers, and the CMake package config a downstream consumer needs.
       - name: Stage install tree
-        run: cmake --install build --prefix staging/cuflash-attn
+        run: cmake --install build --prefix staging/cuflash
 
       - name: Package release artifact
         run: |
           version="${{ steps.version.outputs.version }}"
           asset="cuflash-attn-${version}-linux-x86_64.tar.gz"
-          tar -C staging -czf "${asset}" cuflash-attn
+          tar -C staging -czf "${asset}" cuflash
           sha256sum "${asset}" > "${asset}.sha256"
           echo "asset=${asset}" >> "$GITHUB_ENV"
 
@@ -107,7 +107,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
-            ## CuFlash-Attn ${{ steps.version.outputs.version }}
+            ## cuflash ${{ steps.version.outputs.version }}
 
             ### Changes | 变更
             ${{ steps.changelog.outputs.changes }}

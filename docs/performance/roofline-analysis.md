@@ -6,7 +6,7 @@
 > 当前结果发布规则见 [基准测试](./benchmarks.md)。
 
 > **版本**: v1.0（HBM 流量模型已按本实现实际结构修正：固定 tile、K/V 按 Q block 重载；WMMA 路径见 tensor-core 迁移文档）  
-> **适用范围**: CuFlash-Attn 前向/反向 kernel，FP16，causal/non-causal  
+> **适用范围**: cuflash 前向/反向 kernel，FP16，causal/non-causal  
 > **前置阅读**: [基准测试](./benchmarks.md)（本机快照、复验协议与历史数据边界）
 
 ---
@@ -338,7 +338,7 @@ FlashAttention-2 (参考):        △ @ AI≈O(N),  P≈80+ TFLOPS
 
 ### 6.2 对比汇总表
 
-| 维度 | 标准 Attention (Materialized) | CuFlash-Attn（本实现，固定 tile） | FlashAttention-2/3 (生产级) |
+| 维度 | 标准 Attention (Materialized) | cuflash（本实现，固定 tile） | FlashAttention-2/3 (生产级) |
 |:---|:---|:---|:---|
 | $AI$ (HBM-only) | $O(d) \approx 64$ | $O(2B_r/\text{bytes}) \approx 64$（固定 tile，**不随 $N$ 增长**） | $O(N/B_c)$（split-KV 后大幅提高） |
 | HBM 流量 scaling | $O(N^2)$ | **$O(N^2)$**（固定 tile，常数更小） | **$O(N)$** / split-KV 后大幅降低 |

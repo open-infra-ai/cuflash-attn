@@ -3,19 +3,19 @@ layout: home
 title: 文档
 
 hero:
-  name: "CuFlash-Attn"
-  text: "从零实现的 CUDA FlashAttention"
-  tagline: 技术白皮书 · O(N) 内存 · FP32/FP16 · 前向与反向
+  name: "cuflash"
+  text: "从零手写的 CUDA FlashAttention"
+  tagline: 标量 → WMMA Tensor Core 前向 · FlashDecoding/Split-KV · Roofline 性能分析
   image:
     src: /hero-logo.svg
-    alt: CuFlash-Attn
+    alt: cuflash
   actions:
     - theme: brand
       text: 开始使用
       link: /guide/quick-start
     - theme: alt
       text: 查看源码
-      link: https://github.com/open-infra-ai/cuflash-attn
+      link: https://github.com/open-infra-ai/cuflash
 ---
 
 <script setup>
@@ -31,37 +31,37 @@ const features = [
     icon: '⚡',
     title: 'O(N) 内存',
     desc: '通过 FlashAttention 分块技术避免在 HBM 中物化 O(N²) 注意力矩阵。',
-    link: { text: '算法详解', href: '/cuflash-attn/algorithm' }
+    link: { text: '算法详解', href: '/cuflash/algorithm' }
   },
   {
     icon: '📦',
     title: '零依赖',
     desc: '纯 CUDA C++，无 PyTorch、无 Cutlass、无 Triton。理解每一行代码，修改每一个细节。',
-    link: { text: 'Kernel 逐行解读', href: '/cuflash-attn/design/kernel-deep-dive' }
+    link: { text: 'Kernel 逐行解读', href: '/cuflash/design/kernel-deep-dive' }
   },
   {
     icon: '🔄',
     title: '完整训练支持',
     desc: '前向与反向传播，含梯度重计算。FP32 与 FP16，数值安全累加。',
-    link: { text: 'API 参考', href: '/cuflash-attn/api-reference' }
+    link: { text: 'API 参考', href: '/cuflash/api-reference' }
   },
   {
     icon: '🎯',
     title: '可配置架构编译',
     desc: '源码可配置 sm_70 到 sm_90；当前公开结果只以实际归档的硬件与版本为准。',
-    link: { text: '基准测试', href: '/cuflash-attn/performance/benchmarks' }
+    link: { text: '基准测试', href: '/cuflash/performance/benchmarks' }
   },
   {
     icon: '📐',
     title: '稳定 C ABI',
     desc: '稳定的 C ABI，便于与 Python、Rust 或任何支持 FFI 的语言集成。',
-    link: { text: 'C API 文档', href: '/cuflash-attn/api-reference#c-api' }
+    link: { text: 'C API 文档', href: '/cuflash/api-reference#c-api' }
   },
   {
     icon: '🔬',
     title: '轻量维护',
     desc: '文档、工作流与仓库结构保持精简，并与实际库边界持续对齐。',
-    link: { text: '项目状态', href: '/cuflash-attn/project-status' }
+    link: { text: '项目状态', href: '/cuflash/project-status' }
   }
 ]
 </script>
@@ -400,8 +400,8 @@ const features = [
 ::: code-group
 
 ```bash [克隆 & 构建]
-git clone https://github.com/open-infra-ai/cuflash-attn.git
-cd cuflash-attn
+git clone https://github.com/open-infra-ai/cuflash.git
+cd cuflash
 
 cmake --preset release
 cmake --build --preset release

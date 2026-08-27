@@ -1,6 +1,6 @@
 # 参考文献
 
-本页以 BibTeX 风格收录 CuFlash-Attn 设计与实现过程中直接引用的核心文献，按类别编排，便于学术引用与交叉验证。
+本页以 BibTeX 风格收录 cuflash 设计与实现过程中直接引用的核心文献，按类别编排，便于学术引用与交叉验证。
 
 ---
 
@@ -15,7 +15,7 @@
 
 ## 核心论文
 
-以下文献直接定义了 FlashAttention 算法的数学基础、分块策略与数值稳定性机制，是阅读 CuFlash-Attn 源码的必读材料。
+以下文献直接定义了 FlashAttention 算法的数学基础、分块策略与数值稳定性机制，是阅读 cuflash 源码的必读材料。
 
 ---
 
@@ -185,7 +185,7 @@
 
 ## 实现参考
 
-以下仓库与教程为 CuFlash-Attn 的代码结构、API 设计与工程实践提供了直接参考。
+以下仓库与教程为 cuflash 的代码结构、API 设计与工程实践提供了直接参考。
 
 ---
 
@@ -245,7 +245,7 @@
 }
 ```
 
-> 本项目关联：Triton tutorial 提供了高层次的 kernel 设计思路，CuFlash-Attn 将其映射为显式 CUDA C++ 实现，以暴露底层硬件执行细节。
+> 本项目关联：Triton tutorial 提供了高层次的 kernel 设计思路，cuflash 将其映射为显式 CUDA C++ 实现，以暴露底层硬件执行细节。
 
 ---
 
@@ -366,16 +366,16 @@
 
 ---
 
-## 引用 CuFlash-Attn
+## 引用 cuflash
 
-如需在学术工作中引用 CuFlash-Attn 本项目，建议使用以下格式：
+如需在学术工作中引用 cuflash 本项目，建议使用以下格式：
 
 ```bibtex
 @software{cuflashattn2024,
-  title={CuFlash-Attn: From-Scratch {CUDA} {C++} {FlashAttention} Reference Library},
+  title={cuflash: From-Scratch {CUDA} {C++} {FlashAttention} Reference Library},
   author={{open-infra-ai}},
   year={2024},
-  url={https://github.com/open-infra-ai/cuflash-attn},
+  url={https://github.com/open-infra-ai/cuflash},
   note={Version 0.5.0, stable baseline}
 }
 ```

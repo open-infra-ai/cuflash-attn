@@ -7,12 +7,12 @@ const base = rawBase
   ? rawBase.startsWith('/')
     ? rawBase.endsWith('/') ? rawBase : `${rawBase}/`
     : `/${rawBase}/`
-  : '/cuflash-attn/'  // fallback for local dev
+  : '/cuflash/'  // fallback for local dev
 
 const head = [
   ['meta', { name: 'theme-color', content: '#76B900' }],
   ['meta', { property: 'og:type', content: 'website' }],
-  ['meta', { property: 'og:site_name', content: 'CuFlash-Attn' }],
+  ['meta', { property: 'og:site_name', content: 'cuflash' }],
   ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
   ['link', { rel: 'alternate icon', href: '/favicon.ico', type: 'image/png', sizes: '16x16' }],
   ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
@@ -33,8 +33,8 @@ const nav = [
     text: '项目',
     items: [
       { text: '项目状态', link: '/project-status' },
-      { text: '发布版本', link: 'https://github.com/open-infra-ai/cuflash-attn/releases' },
-      { text: '仓库源码', link: 'https://github.com/open-infra-ai/cuflash-attn' }
+      { text: '发布版本', link: 'https://github.com/open-infra-ai/cuflash/releases' },
+      { text: '仓库源码', link: 'https://github.com/open-infra-ai/cuflash' }
     ]
   }
 ]
@@ -95,9 +95,9 @@ const sidebar = [
 
 export default withMermaid(defineConfig({
   base,
-  title: 'CuFlash-Attn',
-  titleTemplate: ':title | CuFlash-Attn',
-  description: '从零实现的 CUDA FlashAttention 参考实现',
+  title: 'cuflash',
+  titleTemplate: ':title | cuflash',
+  description: 'cuflash — 从零手写的 CUDA FlashAttention：标量 → WMMA Tensor Core 前向、FlashDecoding/Split-KV、Roofline 性能分析',
   lang: 'zh-CN',
   head,
 
@@ -105,22 +105,22 @@ export default withMermaid(defineConfig({
     logo: {
       light: '/logo-light.svg',
       dark: '/logo-dark.svg',
-      alt: 'CuFlash-Attn'
+      alt: 'cuflash'
     },
-    siteTitle: 'CuFlash-Attn',
+    siteTitle: 'cuflash',
     nav,
     sidebar,
     outline: { label: '本页目录', level: 'deep' },
     docFooter: { prev: '上一页', next: '下一页' },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/open-infra-ai/cuflash-attn' }
+      { icon: 'github', link: 'https://github.com/open-infra-ai/cuflash' }
     ],
     footer: {
-      message: '稳定 v0.5.0 基线 · 精简 CUDA FlashAttention 参考实现',
+      message: '稳定 v0.5.0 基线 · 从零手写的 CUDA FlashAttention',
       copyright: 'Copyright 2026 open-infra-ai.'
     },
     editLink: {
-      pattern: 'https://github.com/open-infra-ai/cuflash-attn/edit/master/docs/:path',
+      pattern: 'https://github.com/open-infra-ai/cuflash/edit/master/docs/:path',
       text: '在 GitHub 上编辑此页面'
     },
     lastUpdated: {

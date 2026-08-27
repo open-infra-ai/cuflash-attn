@@ -163,7 +163,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ### 3.1 绝对耗时对比
 
-| seq_len | batch | heads | PyTorch SDPA (ms) | CuFlash-Attn (ms) | 加速比 (SDPA/ ours) |
+| seq_len | batch | heads | PyTorch SDPA (ms) | cuflash (ms) | 加速比 (SDPA/ ours) |
 |:-------:|:-----:|:-----:|:-----------------:|:-----------------:|:-------------------:|
 | 1,024   | 1     | 8     | 0.12              | 0.19              | 0.63×               |
 | 1,024   | 8     | 16    | 1.82              | 2.72              | 0.67×               |
@@ -177,7 +177,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 | 指标 | 观察结论 |
 |------|---------|
-| 绝对性能 | CuFlash-Attn 约为 PyTorch SDPA 的 **42%–67%**。这是预期内结果——本库为从零手写 CUDA 的**教学/参考实现**，未接入 cuDNN 高度调优的管线，也未使用 CUTLASS 的 warp-specialization 与自动调度。 |
+| 绝对性能 | cuflash 约为 PyTorch SDPA 的 **42%–67%**。这是预期内结果——本库为从零手写 CUDA 的**教学/参考实现**，未接入 cuDNN 高度调优的管线，也未使用 CUTLASS 的 warp-specialization 与自动调度。 |
 | 趋势一致性 | 随着 `seq_len` 增大，两者的 scaling 曲线基本平行（均接近 $O(N^2)$ 计算量），说明本实现的核心 tiling 与 softmax 重缩放逻辑是正确的。 |
 | 小序列开销 | 在 `seq_len=1K` 时，本实现相对差距最大（0.63×），因为 kernel launch、causal mask 边界判断与 warp-level reduction 的固定开销占比更高。 |
 
@@ -191,7 +191,7 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 单位: **MB**。对比标准 Attention（$O(N^2)$ 中间激活）与 FlashAttention（$O(N)$ 激活）。
 
-| seq_len | batch | heads | 标准 Attention (MB) | CuFlash-Attn (MB) | 节省比例 |
+| seq_len | batch | heads | 标准 Attention (MB) | cuflash (MB) | 节省比例 |
 |:-------:|:-----:|:-----:|:-------------------:|:-----------------:|:--------:|
 | 1,024   | 1     | 8     | 32.5                | 16.2              | 50.2%    |
 | 4,096   | 1     | 8     | 512.0               | 65.0              | 87.3%    |
@@ -263,8 +263,8 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/your-org/cuflash-attn.git
-cd cuflash-attn
+git clone https://github.com/your-org/cuflash.git
+cd cuflash
 
 # 2. 使用 CMake Preset 构建 benchmark 目标
 cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON
@@ -302,7 +302,7 @@ RUN git clone https://github.com/google/benchmark.git /tmp/benchmark \
     && cmake --install /tmp/benchmark/build
 
 WORKDIR /workspace
-COPY . /workspace/cuflash-attn
+COPY . /workspace/cuflash
 RUN cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON \
     && cmake --build --preset release --target cuflash_attn_bench
 

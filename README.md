@@ -1,22 +1,22 @@
-# CuFlash-Attn
+# cuflash
 
 > 📚 Portfolio map: https://github.com/open-infra-ai/open-infra-ai
 
-> **从零实现的 CUDA C++ FlashAttention 教学/参考实现；FP16/BF16 前向已接入 WMMA。**
+> **cuflash — 从零手写的 CUDA FlashAttention：标量 → WMMA Tensor Core 前向、FlashDecoding/Split-KV、Roofline 性能分析；FP16/BF16/FP32 前反向，sm_70–sm_90。**
 
-[![CI](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash-attn/ci.yml?branch=master&style=flat-square&logo=github&label=CI)](https://github.com/open-infra-ai/cuflash-attn/actions/workflows/ci.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash-attn/codeql.yml?branch=master&style=flat-square&logo=github&label=CodeQL)](https://github.com/open-infra-ai/cuflash-attn/actions/workflows/codeql.yml)
-[![Docs](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash-attn/pages.yml?branch=master&style=flat-square&logo=githubpages&logoColor=white&label=文档)](https://open-infra-ai.github.io/cuflash-attn/)
+[![CI](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash/ci.yml?branch=master&style=flat-square&logo=github&label=CI)](https://github.com/open-infra-ai/cuflash/actions/workflows/ci.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash/codeql.yml?branch=master&style=flat-square&logo=github&label=CodeQL)](https://github.com/open-infra-ai/cuflash/actions/workflows/codeql.yml)
+[![Docs](https://img.shields.io/github/actions/workflow/status/open-infra-ai/cuflash/pages.yml?branch=master&style=flat-square&logo=githubpages&logoColor=white&label=文档)](https://open-infra-ai.github.io/cuflash/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/github/v/release/open-infra-ai/cuflash-attn?style=flat-square&label=版本)](https://github.com/open-infra-ai/cuflash-attn/releases)
+[![Version](https://img.shields.io/github/v/release/open-infra-ai/cuflash?style=flat-square&label=版本)](https://github.com/open-infra-ai/cuflash/releases)
 
-[文档](https://open-infra-ai.github.io/cuflash-attn/) · [API 参考](https://open-infra-ai.github.io/cuflash-attn/api-reference) · [更新日志](CHANGELOG.md)
+[文档](https://open-infra-ai.github.io/cuflash/) · [API 参考](https://open-infra-ai.github.io/cuflash/api-reference) · [更新日志](CHANGELOG.md)
 
 ---
 
 ## 🎯 项目简介
 
-CuFlash-Attn 是一个**从零实现的 FlashAttention 算法**，用于教育学习、研究实验和轻量集成。
+cuflash 是一个**从零手写的 CUDA FlashAttention 深度实现**：从正确起步，经标量内核 → WMMA Tensor Core 前向的优化迭代，形成有数据支撑的性能叙事（教学可读性为底色，内核深度为作品定位，见 [ROADMAP](ROADMAP.md)）。
 
 在五仓学习路径中，本仓库负责 CUDA C++ FlashAttention 前向/反向的专项深挖；CUDA 基础、Triton 实现、完整推理运行时和 Serving 控制面分别由其他主仓承担。整体顺序见 [`LEARNING_PATH.md`](https://github.com/open-infra-ai/open-infra-ai/blob/master/LEARNING_PATH.md)（meta 仓）。
 
@@ -24,10 +24,10 @@ CuFlash-Attn 是一个**从零实现的 FlashAttention 算法**，用于教育�
 
 - **状态**：**stable**（当前源码与最新 Release 为 `0.5.1`；只修正确性 bug 与文档，处于维护收敛阶段）
 - **权威入口**：公开头文件、实现、测试和用户文档
-- **定位**：面向学习、审计与轻量集成的精简参考实现
+- **定位**：从零手写的 kernel 深度作品——教学可读性为底色，优化迭代叙事为定位（见 [ROADMAP](ROADMAP.md)）
 - **当前重点**：删除过时流程层、收紧文档并修复长尾缺陷，而不是扩展新功能
 
-### 为什么选择 CuFlash-Attn？
+### 为什么选择 cuflash？
 
 | 挑战 | 解决方案 |
 |------|----------|
@@ -54,7 +54,7 @@ CuFlash-Attn 是一个**从零实现的 FlashAttention 算法**，用于教育�
 
 ### 与同类库对比
 
-| 特性 | CuFlash-Attn | PyTorch SDPA | xFormers | FlashAttention-2 |
+| 特性 | cuflash | PyTorch SDPA | xFormers | FlashAttention-2 |
 |------|--------------|--------------|----------|------------------|
 | **教学代码** | ✅ 清晰简洁 | ❌ 复杂难读 | ❌ 复杂难读 | ⚠️ 中等 |
 | **自定义修改** | ✅ 容易 | ⚠️ 困难 | ⚠️ 困难 | ⚠️ 困难 |
@@ -63,7 +63,7 @@ CuFlash-Attn 是一个**从零实现的 FlashAttention 算法**，用于教育�
 | **训练支持** | ✅ 完整 | ✅ 完整 | ✅ 完整 | ✅ 完整 |
 | **BF16 支持** | ✅ 是 | ✅ 是 | ✅ 是 | ✅ 是 |
 
-> **选择 CuFlash-Attn 的场景**：希望理解、修改或嵌入 FlashAttention，同时避免繁重的依赖。
+> **选择 cuflash 的场景**：希望理解、修改或嵌入 FlashAttention，同时避免繁重的依赖。
 
 ---
 
@@ -93,8 +93,8 @@ CuFlash-Attn 是一个**从零实现的 FlashAttention 算法**，用于教育�
 
 ```bash
 # 克隆仓库
-git clone https://github.com/open-infra-ai/cuflash-attn.git
-cd cuflash-attn
+git clone https://github.com/open-infra-ai/cuflash.git
+cd cuflash
 
 # 使用预设构建（Release 模式）
 cmake --preset release
@@ -108,10 +108,10 @@ ctest --preset release --output-on-failure
 
 ```bash
 # 构建 Docker 镜像
-docker build -t cuflash-attn .
+docker build -t cuflash .
 
 # 运行（需要 GPU 支持）
-docker run --gpus all -it cuflash-attn
+docker run --gpus all -it cuflash
 
 # 容器内运行基准测试
 ./cuflash_attn_bench
@@ -205,7 +205,7 @@ V = torch.randn(B, H, N, D, dtype=torch.float32, device='cuda')
 O = torch.empty_like(Q)
 L = torch.empty(B, H, N, dtype=torch.float32, device='cuda')
 
-# 调用 CuFlash-Attn
+# 调用 cuflash
 scale = 1.0 / np.sqrt(D)
 result = lib.cuflash_attention_forward_f32(
     ctypes.c_void_p(Q.data_ptr()),
@@ -249,11 +249,11 @@ cmake --build --preset release
 
 | 资源 | 链接 |
 |------|------|
-| 📘 **完整文档** | [https://open-infra-ai.github.io/cuflash-attn/](https://open-infra-ai.github.io/cuflash-attn/) |
-| 🔌 **API 参考** | [API 文档](https://open-infra-ai.github.io/cuflash-attn/api-reference) |
-| 🧠 **算法详解** | [深入理解 FlashAttention](https://open-infra-ai.github.io/cuflash-attn/algorithm) |
-| 🔧 **构建指南** | [从源码构建](https://open-infra-ai.github.io/cuflash-attn/building) |
-| ❓ **故障排除** | [常见问题与解决方案](https://open-infra-ai.github.io/cuflash-attn/troubleshooting) |
+| 📘 **完整文档** | [https://open-infra-ai.github.io/cuflash/](https://open-infra-ai.github.io/cuflash/) |
+| 🔌 **API 参考** | [API 文档](https://open-infra-ai.github.io/cuflash/api-reference) |
+| 🧠 **算法详解** | [深入理解 FlashAttention](https://open-infra-ai.github.io/cuflash/algorithm) |
+| 🔧 **构建指南** | [从源码构建](https://open-infra-ai.github.io/cuflash/building) |
+| ❓ **故障排除** | [常见问题与解决方案](https://open-infra-ai.github.io/cuflash/troubleshooting) |
 
 ---
 
@@ -290,7 +290,7 @@ cmake --build --preset release
 ## 🏗️ 项目结构
 
 ```
-cuflash-attn/
+cuflash/
 ├── benchmarks/                 # 性能基准测试（Google Benchmark）
 ├── cmake/                      # CMake 模块和打包配置
 ├── docs/                       # VitePress 文档站点（中文）
@@ -409,6 +409,6 @@ ctest --preset release --output-on-failure
 ---
 
 <p align="center">
-  <sub>用 ❤️ 打造的教学/参考注意力实现</sub><br>
-  <sub>精简参考实现 · CUDA C++ · 开源</sub>
+  <sub>用 ❤️ 打造的 CUDA FlashAttention 深度作品</sub><br>
+  <sub>从零手写 · CUDA C++ · 开源</sub>
 </p>

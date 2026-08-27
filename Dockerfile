@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# CuFlash-Attn Docker image.
+# cuflash Docker image.
 #
 # Multi-stage build: a devel stage compiles the library, tests, and benchmarks;
 # the final stage is a slim CUDA runtime image carrying only the built
@@ -39,10 +39,10 @@ RUN cmake --preset release \
 # ---------------------------------------------------------------------------
 FROM nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu22.04
 
-LABEL maintainer="CuFlash-Attn Team"
-LABEL description="CuFlash-Attn: from-scratch CUDA FlashAttention reference implementation"
+LABEL maintainer="cuflash Team"
+LABEL description="cuflash: from-scratch CUDA FlashAttention — scalar to WMMA tensor-core forward, FlashDecoding/Split-KV, Roofline analysis"
 
-WORKDIR /workspace/cuflash-attn
+WORKDIR /workspace/cuflash
 
 # Bring over only what is needed to run: the shared library, the test and
 # benchmark binaries, and the public headers.
@@ -52,6 +52,6 @@ COPY --from=builder /src/build/release/cuflash_attn_bench ./
 COPY --from=builder /src/build/release/cuflash_attn_api_smoke ./
 COPY --from=builder /src/include ./include
 
-ENV LD_LIBRARY_PATH=/workspace/cuflash-attn:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=/workspace/cuflash:${LD_LIBRARY_PATH}
 
 CMD ["/bin/bash"]

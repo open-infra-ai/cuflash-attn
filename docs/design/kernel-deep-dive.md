@@ -8,7 +8,7 @@
 > CUDA core 上完成。本文档下述的 SMEM 布局（全 `float`）与 `matmul_ABt` 仅对应 scalar
 > 路径；WMMA 路径的布局与分派见 [tensor-core-migration.md](./tensor-core-migration.md)。
 
-本文档逐行拆解 CuFlash-Attn 的 CUDA kernel 实现，覆盖从 launch configuration 到 warp-level 指令流水的全部细节。所有结论均直接对应源码，不作模糊表述。
+本文档逐行拆解 cuflash 的 CUDA kernel 实现，覆盖从 launch configuration 到 warp-level 指令流水的全部细节。所有结论均直接对应源码，不作模糊表述。
 
 ---
 

@@ -1,6 +1,6 @@
 # 快速开始
 
-几分钟内让 CuFlash-Attn 运行起来。
+几分钟内让 cuflash 运行起来。
 
 ## 前置条件
 
@@ -14,8 +14,8 @@
 ### 克隆仓库
 
 ```bash
-git clone https://github.com/open-infra-ai/cuflash-attn.git
-cd cuflash-attn
+git clone https://github.com/open-infra-ai/cuflash.git
+cd cuflash
 ```
 
 ### 使用 CMake Presets 构建

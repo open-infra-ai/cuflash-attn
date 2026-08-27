@@ -1,6 +1,6 @@
-# Contributing to CuFlash-Attn
+# Contributing to cuflash
 
-CuFlash-Attn is maintained as a **lean CUDA FlashAttention reference implementation**. Favor fixes, refactors, documentation accuracy, and workflow simplification over feature growth.
+cuflash is maintained as a **from-scratch CUDA FlashAttention implementation** — built with optimization-iteration discipline (scalar → WMMA tensor-core forward, FlashDecoding/Split-KV, Roofline analysis). Favor fixes, refactors, documentation accuracy, and workflow simplification over feature growth.
 
 ## Prerequisites
 

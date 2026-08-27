@@ -1,4 +1,4 @@
-# CuFlash-Attn Copilot Instructions
+# cuflash Copilot Instructions
 
 - 用中文回复；code comments 和 API docs 保持英文。
 - 这是一个精简维护中的 CUDA FlashAttention 参考库；优先保持实现清晰、稳定、可审计。

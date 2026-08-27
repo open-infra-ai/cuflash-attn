@@ -1,6 +1,6 @@
 # 架构总览
 
-本页提供 CuFlash-Attn 的全面架构视图，面向需要理解系统设计的研究人员和工程师。
+本页提供 cuflash 的全面架构视图，面向需要理解系统设计的研究人员和工程师。
 
 ---
 
@@ -176,7 +176,7 @@ $$
 ## 目录结构
 
 ```
-cuflash-attn/
+cuflash/
 ├── include/cuflash/          # 公开 API 头文件
 │   ├── flash_attention.h     # C++ 命名空间 API（含 C ABI 声明）
 │   ├── export.h              # 可见性宏

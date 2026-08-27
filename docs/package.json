@@ -1,9 +1,9 @@
 {
-  "name": "cuflash-attn-docs",
+  "name": "cuflash-docs",
   "private": true,
   "version": "0.5.1",
   "type": "module",
-  "description": "Academic-grade documentation for CuFlash-Attn",
+  "description": "Academic-grade documentation for cuflash",
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",

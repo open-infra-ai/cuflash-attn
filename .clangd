@@ -1,4 +1,4 @@
-# clangd Language Server Configuration for CuFlash-Attn
+# clangd Language Server Configuration for cuflash
 # Preferred workflow:
 # 1. Run `cmake --preset release` to generate build/release/compile_commands.json.
 # 2. If CUDA Toolkit + nvcc are available, clangd gets full project-aware diagnostics.

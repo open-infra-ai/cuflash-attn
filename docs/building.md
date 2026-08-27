@@ -1,6 +1,6 @@
 # 构建指南
 
-从源代码构建 CuFlash-Attn 的完整指南。
+从源代码构建 cuflash 的完整指南。
 
 ---
 
@@ -47,8 +47,8 @@ g++ --version
 
 ```bash
 # 克隆仓库
-git clone https://github.com/open-infra-ai/cuflash-attn.git
-cd cuflash-attn
+git clone https://github.com/open-infra-ai/cuflash.git
+cd cuflash
 
 # 使用 preset 构建（推荐）
 cmake --preset release
@@ -333,8 +333,8 @@ RUN cmake --preset release && \
 
 运行：
 ```bash
-docker build -t cuflash-attn .
-docker run --gpus all cuflash-attn ./build/release/cuflash_attn_tests
+docker build -t cuflash .
+docker run --gpus all cuflash ./build/release/cuflash_attn_tests
 ```
 
 ---

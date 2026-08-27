@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in CuFlash-Attn
+about: Report a bug in cuflash
 labels: bug
 ---
 
@@ -9,7 +9,7 @@ labels: bug
 - **GPU**: <!-- e.g., RTX 3090 (sm_86), A100 (sm_80) -->
 - **CUDA Toolkit**: <!-- e.g., 12.4.1 -->
 - **OS**: <!-- e.g., Ubuntu 22.04 -->
-- **cuflash-attn version**: <!-- e.g., v0.3.0 -->
+- **cuflash version**: <!-- e.g., v0.3.0 -->
 
 ## 问题描述 / Description
 

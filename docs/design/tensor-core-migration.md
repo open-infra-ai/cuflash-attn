@@ -4,7 +4,7 @@
 
 ## 为什么需要它
 
-CuFlash-Attn 正确但慢。kernel 把每个 matmul 都写成朴素标量循环——一个线程产出一个输出元素、
+cuflash 正确但慢。kernel 把每个 matmul 都写成朴素标量循环——一个线程产出一个输出元素、
 对 `K`/`HEAD_DIM` 维串行累加（`src/kernels/impl/tile_io.cuh` 的 `matmul_ABt`），而融合的
 softmax/`P@V` 段更是**一个线程包办一整行 query**（`src/forward/flash_attention_forward_typed.cu`）。
 没有 Tensor Core、没有 `cp.async`、没有寄存器分块、没有 warp 级协作。
@@ -104,5 +104,5 @@ benchmark 在 `head_dim ∈ {64,128}` 上相对阶段 1 显示大幅倍数提升
 
 ## 怎样算 "完成"
 
-README 的性能表可在某台具名设备上由 `benchmarks/` 复现，CuFlash-Attn 在 `head_dim=128` 上与官方
+README 的性能表可在某台具名设备上由 `benchmarks/` 复现，cuflash 在 `head_dim=128` 上与官方
 FlashAttention 相差在较小倍数内，且每个数字都由入库的 benchmark 运行支撑，而非估算。
