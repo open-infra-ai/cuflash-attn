@@ -20,7 +20,7 @@ hero:
 
 <script setup>
 const stats = [
-  { value: 'v0.5.1', label: '稳定版' },
+  { value: 'v0.6.0', label: '稳定版' },
   { value: 'FP32/16/BF16', label: '数值路径' },
   { value: 'WMMA', label: '前向 Tensor Core' },
   { value: 'C++ / CUDA', label: '最小依赖' }

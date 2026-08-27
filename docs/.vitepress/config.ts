@@ -116,7 +116,7 @@ export default withMermaid(defineConfig({
       { icon: 'github', link: 'https://github.com/open-infra-ai/cuflash' }
     ],
     footer: {
-      message: '稳定 v0.5.0 基线 · 从零手写的 CUDA FlashAttention',
+      message: '稳定 v0.6.0 · 从零手写的 CUDA FlashAttention',
       copyright: 'Copyright 2026 open-infra-ai.'
     },
     editLink: {

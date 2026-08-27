@@ -7,7 +7,7 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
     set(CMAKE_CUDA_ARCHITECTURES "80;86" CACHE STRING "CUDA architectures")
 endif()
 
-project(cuflash VERSION 0.5.1 LANGUAGES CXX CUDA)
+project(cuflash VERSION 0.6.0 LANGUAGES CXX CUDA)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
