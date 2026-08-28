@@ -48,8 +48,8 @@
 
 ```bash
 cmake --preset release \
-  -DCUFASH_ATTN_BENCHMARKS=ON \
-  -DCUFASH_ATTN_ARCHS="70;80;90"
+  -DBUILD_BENCHMARKS=ON \
+  -DCMAKE_CUDA_ARCHITECTURES="70;80;90"
 cmake --build --preset release --target cuflash_bench
 ```
 
@@ -263,11 +263,11 @@ PyTorch 2.2 的 `torch.nn.functional.scaled_dot_product_attention` 默认优先�
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/your-org/cuflash.git
+git clone https://github.com/open-infra-ai/cuflash.git
 cd cuflash
 
 # 2. 使用 CMake Preset 构建 benchmark 目标
-cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON
+cmake --preset release -DBUILD_BENCHMARKS=ON
 cmake --build --preset release --target cuflash_bench
 
 # 3. 运行全量 benchmark（约 20–30 分钟）
@@ -303,7 +303,7 @@ RUN git clone https://github.com/google/benchmark.git /tmp/benchmark \
 
 WORKDIR /workspace
 COPY . /workspace/cuflash
-RUN cmake --preset release -DCUFASH_ATTN_BENCHMARKS=ON \
+RUN cmake --preset release -DBUILD_BENCHMARKS=ON \
     && cmake --build --preset release --target cuflash_bench
 
 CMD ["./build/release/bench/cuflash_bench"]

@@ -82,5 +82,5 @@ cmake --preset release && cmake --build --preset release -j
 
 - 当前是两 kernel（partial + combine），未做单 kernel 原子归约；
 - 未做 KV 物理块页式布局（本仓库 Q/K/V 是连续 `[bh, S, D]`），
-  页式 PagedAttention 控制面在 paged-infer；
+  页式 PagedAttention 控制面在 paged-serving；
 - 后续可加 `num_chunks` autotune 或与 FlashAttention-3 式 split 归约合并。
