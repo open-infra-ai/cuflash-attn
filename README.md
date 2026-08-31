@@ -77,7 +77,7 @@ cuflash 是一个**从零手写的 CUDA FlashAttention 深度实现**：从正�
 
 **OUT（明确不做，见对应仓库）**：
 - GEMM 基础与 CUDA 编程学习 → [cuda-foundations](https://github.com/open-infra-ai/cuda-foundations)
-- Triton 版算子（参考实现）→ [triton-fused-ops](https://github.com/open-infra-ai/triton-fused-ops)
+- Triton 版算子（参考实现）→ [trifuse](https://github.com/open-infra-ai/trifuse)
 - 完整推理运行时（模型加载/采样/生成）→ [tiny-llm](https://github.com/open-infra-ai/tiny-llm)
 
 ## 🚀 快速开始
